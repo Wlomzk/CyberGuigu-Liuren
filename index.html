@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 六宮法陣</title>
+    <title>CyberGuigu-Liuren | 雙環法陣</title>
     <style>
         :root {
             --bg-deep: #070605;
@@ -25,8 +25,8 @@
         }
 
         .ring-container {
-            width: 360px;
-            height: 360px;
+            width: 380px;
+            height: 380px;
             filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
         }
 
@@ -49,6 +49,7 @@
             filter: drop-shadow(0 0 10px var(--patina-glow));
         }
 
+        /* 內環文字樣式（完全保留你的原始座標與結構） */
         .palace-text {
             fill: var(--text-color);
             font-size: 15px;
@@ -64,11 +65,23 @@
             fill: var(--patina-glow);
             text-shadow: 0 0 8px var(--patina-glow);
         }
+
+        /* 外環十二地支文字樣式 */
+        .outer-text {
+            fill: var(--text-color);
+            font-size: 13px;
+            font-weight: 500;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
 
     <svg class="ring-container" viewBox="0 0 300 300">
+        <!-- ================= 內環六宮 (完全保留你的原始程式碼) ================= -->
+        
         <!-- 01. 大安 (-120° ~ -60° | 頂部水平排列) -->
         <g class="palace-group" onclick="selectPalace(0)" id="group-0">
             <path class="palace-path" d="M 115 89.38 L 85 37.42 A 130 130 0 0 1 215 37.42 L 185 89.38 A 70 70 0 0 0 115 89.38 Z" />
@@ -116,6 +129,58 @@
                 <tspan x="60" dy="30">亡</tspan>
             </text>
         </g>
+
+
+        <!-- ================= 外環十二地支層 (外徑 R=145, 內徑 r=130) ================= -->
+        
+        <!-- 01. 子 (頂部中間偏右) -->
+        <path class="palace-path" d="M 135 18 A 145 145 0 0 1 165 18 L 215 37.42 A 130 130 0 0 1 115 37.42 Z" />
+        <text class="outer-text" x="150" y="27">子</text>
+
+        <!-- 02. 丑 -->
+        <path class="palace-path" d="M 165 18 A 145 145 0 0 1 207.54 42.46 L 243.21 78.13 A 130 130 0 0 1 215 37.42 Z" />
+        <text class="outer-text" x="195" y="47">丑</text>
+
+        <!-- 03. 寅 -->
+        <path class="palace-path" d="M 207.54 42.46 A 145 145 0 0 1 232.08 85 L 269.62 110.38 A 130 130 0 0 1 243.21 78.13 Z" />
+        <text class="outer-text" x="233" y="79">寅</text>
+
+        <!-- 04. 卯 -->
+        <path class="palace-path" d="M 232.08 85 A 145 145 0 0 1 282 135 L 280 150 A 130 130 0 0 1 269.62 110.38 Z" />
+        <text class="outer-text" x="261" y="117">卯</text>
+
+        <!-- 05. 辰 -->
+        <path class="palace-path" d="M 282 135 A 145 145 0 0 1 232.08 215 L 269.62 189.62 A 130 130 0 0 1 280 150 Z" />
+        <text class="outer-text" x="261" y="183">辰</text>
+
+        <!-- 06. 巳 -->
+        <path class="palace-path" d="M 232.08 215 A 145 145 0 0 1 207.54 257.54 L 243.21 221.87 A 130 130 0 0 1 269.62 189.62 Z" />
+        <text class="outer-text" x="233" y="221">巳</text>
+
+        <!-- 07. 午 (底部中間) -->
+        <path class="palace-path" d="M 207.54 257.54 A 145 145 0 0 1 165 282 L 185 262.58 A 130 130 0 0 1 243.21 221.87 Z" />
+        <text class="outer-text" x="150" y="273">午</text>
+
+        <!-- 08. 未 -->
+        <path class="palace-path" d="M 165 282 A 145 145 0 0 1 135 282 L 115 262.58 A 130 130 0 0 1 185 262.58 Z" />
+        <text class="outer-text" x="120" y="273">未</text>
+
+        <!-- 09. 申 -->
+        <path class="palace-path" d="M 135 282 A 145 145 0 0 1 92.46 257.54 L 56.79 221.87 A 130 130 0 0 1 115 262.58 Z" />
+        <text class="outer-text" x="67" y="221">申</text>
+
+        <!-- 10. 西 -->
+        <path class="palace-path" d="M 92.46 257.54 A 145 145 0 0 1 67.92 215 L 30.38 189.62 A 130 130 0 0 1 56.79 221.87 Z" />
+        <text class="outer-text" x="39" y="183">西</text>
+
+        <!-- 11. 戌 -->
+        <path class="palace-path" d="M 67.92 215 A 145 145 0 0 1 18 165 L 20 150 A 130 130 0 0 1 30.38 189.62 Z" />
+        <text class="outer-text" x="39" y="117">戌</text>
+
+        <!-- 12. 亥 -->
+        <path class="palace-path" d="M 18 165 A 145 145 0 0 1 135 18 L 115 37.42 A 130 130 0 0 1 20 150 Z" />
+        <text class="outer-text" x="67" y="79">亥</text>
+
     </svg>
 
     <script>
