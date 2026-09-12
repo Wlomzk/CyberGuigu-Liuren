@@ -25,8 +25,8 @@
         }
 
         .ring-container {
-            width: 440px;
-            height: 440px;
+            width: 480px;
+            height: 480px;
             filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
         }
 
@@ -89,11 +89,12 @@
         }
     </style>
 </head>
-<body> 
+<body>
 
-    <svg class="ring-container" viewBox="-200 -200 400 400">
+    <!-- 視口放大以容納 210 半徑 -->
+    <svg class="ring-container" viewBox="-230 -230 460 460">
         
-        <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130，每宮 60 度) ================= -->
+        <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130) ================= -->
         <g id="inner-layer">
             <!-- 01. 大安 -->
             <g class="inner-group" onclick="selectInner(0)" id="inner-0">
@@ -133,67 +134,67 @@
         </g>
 
 
-        <!-- ================= 區塊二：外環十二地支 (半徑 150 ~ 180，每宮 30 度) ================= -->
+        <!-- ================= 區塊二：外環十二地支 (半徑 180 ~ 210) ================= -->
         <g id="outer-layer">
             <!-- 01. 子 (-15° ~ 15°) -->
             <g class="outer-group" onclick="selectOuter(0)" id="outer-0">
-                <path class="ring-path" d="M 38.82 -144.89 L 46.56 -173.88 A 180 180 0 0 1 -46.56 -173.88 L -38.82 -144.89 A 150 150 0 0 1 38.82 -144.89 Z" />
-                <text class="outer-text" x="0" y="-161">子</text>
+                <path class="ring-path" d="M -46.56 -173.88 A 180 180 0 0 1 46.56 -173.88 L 54.32 -202.87 A 210 210 0 0 0 -54.32 -202.87 Z" />
+                <text class="outer-text" x="0" y="-191">子</text>
             </g>
             <!-- 02. 丑 (15° ~ 45°) -->
             <g class="outer-group" onclick="selectOuter(1)" id="outer-1">
-                <path class="ring-path" d="M 38.82 -144.89 A 150 150 0 0 1 106.07 -106.07 L 127.28 -127.28 A 180 180 0 0 0 46.56 -173.88 L 38.82 -144.89 Z" />
-                <text class="outer-text" x="114" y="-114">丑</text>
+                <path class="ring-path" d="M 46.56 -173.88 A 180 180 0 0 1 127.28 -127.28 L 148.49 -148.49 A 210 210 0 0 0 54.32 -202.87 Z" />
+                <text class="outer-text" x="133" y="-133">丑</text>
             </g>
             <!-- 03. 寅 (45° ~ 75°) -->
             <g class="outer-group" onclick="selectOuter(2)" id="outer-2">
-                <path class="ring-path" d="M 106.07 -106.07 A 150 150 0 0 1 144.89 -38.82 L 173.88 -46.56 A 180 180 0 0 0 127.28 -127.28 L 106.07 -106.07 Z" />
-                <text class="outer-text" x="161" y="-43">寅</text>
+                <path class="ring-path" d="M 127.28 -127.28 A 180 180 0 0 1 173.88 -46.56 L 202.87 -54.32 A 210 210 0 0 0 148.49 -148.49 Z" />
+                <text class="outer-text" x="188" y="-50">寅</text>
             </g>
             <!-- 04. 卯 (75° ~ 105°) -->
             <g class="outer-group" onclick="selectOuter(3)" id="outer-3">
-                <path class="ring-path" d="M 144.89 -38.82 A 150 150 0 0 1 144.89 38.82 L 173.88 46.56 A 180 180 0 0 0 173.88 -46.56 L 144.89 -38.82 Z" />
-                <text class="outer-text" x="161" y="0">卯</text>
+                <path class="ring-path" d="M 173.88 -46.56 A 180 180 0 0 1 173.88 46.56 L 202.87 54.32 A 210 210 0 0 0 202.87 -54.32 Z" />
+                <text class="outer-text" x="194" y="0">卯</text>
             </g>
             <!-- 05. 辰 (105° ~ 135°) -->
             <g class="outer-group" onclick="selectOuter(4)" id="outer-4">
-                <path class="ring-path" d="M 144.89 38.82 A 150 150 0 0 1 106.07 106.07 L 127.28 127.28 A 180 180 0 0 0 173.88 46.56 L 144.89 38.82 Z" />
-                <text class="outer-text" x="114" y="114">辰</text>
+                <path class="ring-path" d="M 173.88 46.56 A 180 180 0 0 1 127.28 127.28 L 148.49 148.49 A 210 210 0 0 0 202.87 54.32 Z" />
+                <text class="outer-text" x="133" y="133">辰</text>
             </g>
             <!-- 06. 巳 (135° ~ 165°) -->
             <g class="outer-group" onclick="selectOuter(5)" id="outer-5">
-                <path class="ring-path" d="M 106.07 106.07 A 150 150 0 0 1 38.82 144.89 L 46.56 173.88 A 180 180 0 0 0 127.28 127.28 L 106.07 106.07 Z" />
-                <text class="outer-text" x="43" y="161">巳</text>
+                <path class="ring-path" d="M 127.28 127.28 A 180 180 0 0 1 46.56 173.88 L 54.32 202.87 A 210 210 0 0 0 148.49 148.49 Z" />
+                <text class="outer-text" x="50" y="188">巳</text>
             </g>
             <!-- 07. 午 (165° ~ 195°) -->
             <g class="outer-group" onclick="selectOuter(6)" id="outer-6">
-                <path class="ring-path" d="M 38.82 144.89 A 150 150 0 0 1 -38.82 144.89 L -46.56 173.88 A 180 180 0 0 0 46.56 173.88 L 38.82 144.89 Z" />
-                <text class="outer-text" x="0" y="161">午</text>
+                <path class="ring-path" d="M 46.56 173.88 A 180 180 0 0 1 -46.56 173.88 L -54.32 202.87 A 210 210 0 0 0 54.32 202.87 Z" />
+                <text class="outer-text" x="0" y="191">午</text>
             </g>
             <!-- 08. 未 (195° ~ 225°) -->
             <g class="outer-group" onclick="selectOuter(7)" id="outer-7">
-                <path class="ring-path" d="M -38.82 144.89 A 150 150 0 0 1 -106.07 106.07 L -127.28 127.28 A 180 180 0 0 0 -46.56 173.88 L -38.82 144.89 Z" />
-                <text class="outer-text" x="-43" y="161">未</text>
+                <path class="ring-path" d="M -46.56 173.88 A 180 180 0 0 1 -127.28 127.28 L -148.49 148.49 A 210 210 0 0 0 -54.32 202.87 Z" />
+                <text class="outer-text" x="-50" y="188">未</text>
             </g>
             <!-- 09. 申 (225° ~ 255°) -->
             <g class="outer-group" onclick="selectOuter(8)" id="outer-8">
-                <path class="ring-path" d="M -106.07 106.07 A 150 150 0 0 1 -144.89 38.82 L -173.88 46.56 A 180 180 0 0 0 -127.28 127.28 L -106.07 106.07 Z" />
-                <text class="outer-text" x="-114" y="114">申</text>
+                <path class="ring-path" d="M -127.28 127.28 A 180 180 0 0 1 -173.88 46.56 L -202.87 54.32 A 210 210 0 0 0 -148.49 148.49 Z" />
+                <text class="outer-text" x="-133" y="133">申</text>
             </g>
             <!-- 10. 酉 (255° ~ 285°) -->
             <g class="outer-group" onclick="selectOuter(9)" id="outer-9">
-                <path class="ring-path" d="M -144.89 38.82 A 150 150 0 0 1 -144.89 -38.82 L -173.88 -46.56 A 180 180 0 0 0 -173.88 46.56 L -144.89 38.82 Z" />
-                <text class="outer-text" x="-161" y="0">酉</text>
+                <path class="ring-path" d="M -173.88 46.56 A 180 180 0 0 1 -173.88 -46.56 L -202.87 -54.32 A 210 210 0 0 0 -202.87 54.32 Z" />
+                <text class="outer-text" x="-194" y="0">酉</text>
             </g>
             <!-- 11. 戌 (285° ~ 315°) -->
             <g class="outer-group" onclick="selectOuter(10)" id="outer-10">
-                <path class="ring-path" d="M -144.89 -38.82 A 150 150 0 0 1 -106.07 -106.07 L -127.28 -127.28 A 180 180 0 0 0 -173.88 -46.56 L -144.89 -38.82 Z" />
-                <text class="outer-text" x="-161" y="-43">戌</text>
+                <path class="ring-path" d="M -173.88 -46.56 A 180 180 0 0 1 -127.28 -127.28 L -148.49 -148.49 A 210 210 0 0 0 -202.87 -54.32 Z" />
+                <text class="outer-text" x="-188" y="-50">戌</text>
             </g>
             <!-- 12. 亥 (315° ~ 345°) -->
             <g class="outer-group" onclick="selectOuter(11)" id="outer-11">
-                <path class="ring-path" d="M -106.07 -106.07 A 150 150 0 0 1 -38.82 -144.89 L -46.56 -173.88 A 180 180 0 0 0 -127.28 -127.28 L -106.07 -106.07 Z" />
-                <text class="outer-text" x="-114" y="-114">亥</text>
+                <path class="ring-path" d="M -127.28 -127.28 A 180 180 0 0 1 -46.56 -173.88 L -54.32 -202.87 A 210 210 0 0 0 -148.49 -148.49 Z" />
+                <text class="outer-text" x="-133" y="-133">亥</text>
             </g>
         </g>
 
