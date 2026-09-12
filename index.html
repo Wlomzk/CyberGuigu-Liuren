@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 錯位圓環法陣</title>
+    <title>CyberGuigu-Liuren | 精準錯位法陣</title>
     <style>
         :root {
             --bg-deep: #070605;
@@ -49,12 +49,11 @@
             filter: drop-shadow(0 0 10px var(--patina-glow));
         }
 
-        /* 文字基礎樣式 */
         .palace-text {
             fill: var(--text-color);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             text-anchor: middle;
             dominant-baseline: central;
             pointer-events: none;
@@ -71,57 +70,57 @@
 
     <svg class="ring-container" viewBox="0 0 300 300">
         
-        <!-- 01. 大安 (上方：左右微錯位) -->
+        <!-- 01. 大安 (上方：橫向微錯位) -->
         <g class="palace-group" onclick="selectPalace(0)" id="group-0">
-            <path class="palace-path" d="M 150 150 L 150 20 A 130 130 0 0 1 262.58 85 L 192.74 125.36 A 70 70 0 0 0 150 90 Z" />
-            <text class="palace-text" x="150" y="55">
-                <tspan dx="-4" dy="3">大</tspan>
-                <tspan dx="4" dy="-3">安</tspan>
+            <path class="palace-path" d="M 150 150 L 150 20 A 130 130 0 0 1 225.26 45.36 L 180.18 102.68 A 70 70 0 0 0 150 90 Z" />
+            <text class="palace-text" x="150" y="52">
+                <tspan x="142" dy="0">大</tspan>
+                <tspan x="158" dy="0">安</tspan>
             </text>
         </g>
 
-        <!-- 02. 留連 (右上方：斜向錯位) -->
+        <!-- 02. 留連 (右上方：縱向順著圓弧) -->
         <g class="palace-group" onclick="selectPalace(1)" id="group-1">
-            <path class="palace-path" d="M 150 150 L 262.58 85 A 130 130 0 0 1 262.58 215 L 192.74 174.64 A 70 70 0 0 0 192.74 125.36 Z" />
-            <text class="palace-text" x="225" y="150">
-                <tspan dx="0" dy="-6">留</tspan>
-                <tspan dx="0" dy="12">連</tspan>
+            <path class="palace-path" d="M 150 150 L 225.26 45.36 A 130 130 0 0 1 280 150 L 210 150 A 70 70 0 0 0 180.18 102.68 Z" />
+            <text class="palace-text" x="222" y="98">
+                <tspan x="218" dy="-6">留</tspan>
+                <tspan x="226" dy="12">連</tspan>
             </text>
         </g>
 
-        <!-- 03. 速喜 (右下方：斜向錯位) -->
+        <!-- 03. 速喜 (右下方) -->
         <g class="palace-group" onclick="selectPalace(2)" id="group-2">
-            <path class="palace-path" d="M 150 150 L 262.58 215 A 130 130 0 0 1 150 280 L 150 210 A 70 70 0 0 0 192.74 174.64 Z" />
-            <text class="palace-text" x="225" y="210">
-                <tspan dx="0" dy="-6">速</tspan>
-                <tspan dx="0" dy="12">喜</tspan>
+            <path class="palace-path" d="M 150 150 L 280 150 A 130 130 0 0 1 225.26 254.64 L 180.18 197.32 A 70 70 0 0 0 210 150 Z" />
+            <text class="palace-text" x="222" y="202">
+                <tspan x="218" dy="-6">速</tspan>
+                <tspan x="226" dy="12">喜</tspan>
             </text>
         </g>
 
-        <!-- 04. 赤口 (下方：左右微錯位) -->
+        <!-- 04. 赤口 (下方) -->
         <g class="palace-group" onclick="selectPalace(3)" id="group-3">
-            <path class="palace-path" d="M 150 150 L 150 280 A 130 130 0 0 1 37.42 215 L 107.26 174.64 A 70 70 0 0 0 150 210 Z" />
-            <text class="palace-text" x="150" y="245">
-                <tspan dx="-4" dy="-3">赤</tspan>
-                <tspan dx="4" dy="3">口</tspan>
+            <path class="palace-path" d="M 150 150 L 225.26 254.64 A 130 130 0 0 1 74.74 254.64 L 119.82 197.32 A 70 70 0 0 0 180.18 197.32 Z" />
+            <text class="palace-text" x="150" y="248">
+                <tspan x="142" dy="0">赤</tspan>
+                <tspan x="158" dy="0">口</tspan>
             </text>
         </g>
 
-        <!-- 05. 小吉 (左下方：斜向錯位) -->
+        <!-- 05. 小吉 (左下方) -->
         <g class="palace-group" onclick="selectPalace(4)" id="group-4">
-            <path class="palace-path" d="M 150 150 L 37.42 215 A 130 130 0 0 1 37.42 85 L 107.26 125.36 A 70 70 0 0 0 107.26 174.64 Z" />
-            <text class="palace-text" x="75" y="210">
-                <tspan dx="0" dy="12">小</tspan>
-                <tspan dx="0" dy="-12">吉</tspan>
+            <path class="palace-path" d="M 150 150 L 74.74 254.64 A 130 130 0 0 1 20 150 L 90 150 A 70 70 0 0 0 119.82 197.32 Z" />
+            <text class="palace-text" x="78" y="202">
+                <tspan x="82" dy="-6">小</tspan>
+                <tspan x="74" dy="12">吉</tspan>
             </text>
         </g>
 
-        <!-- 06. 空亡 (左上方：符合你的「空偏下亡偏上」) -->
+        <!-- 06. 空亡 (左上方：空偏下、亡偏上) -->
         <g class="palace-group" onclick="selectPalace(5)" id="group-5">
-            <path class="palace-path" d="M 150 150 L 37.42 85 A 130 130 0 0 1 150 20 L 150 90 A 70 70 0 0 0 107.26 125.36 Z" />
-            <text class="palace-text" x="75" y="150">
-                <tspan dx="0" dy="10">空</tspan>
-                <tspan dx="0" dy="-10">亡</tspan>
+            <path class="palace-path" d="M 150 150 L 20 150 A 130 130 0 0 1 74.74 45.36 L 119.82 102.68 A 70 70 0 0 0 90 150 Z" />
+            <text class="palace-text" x="78" y="98">
+                <tspan x="82" dy="-6">空</tspan>
+                <tspan x="74" dy="12">亡</tspan>
             </text>
         </g>
 
