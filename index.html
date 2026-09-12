@@ -316,7 +316,7 @@
 </head>
 <body>
 
-    <!-- 上方月日輸入控制面板 -->
+    <!-- 上方月日輸入控制面板 (傳統時辰全盤法) -->
     <div class="control-panel">
         <label for="lunar-month">農曆月:</label>
         <input type="number" id="lunar-month" min="1" max="12" placeholder="1-12">
@@ -324,7 +324,7 @@
         <label for="lunar-day">農曆日:</label>
         <input type="number" id="lunar-day" min="1" max="30" placeholder="1-30">
         
-        <button onclick="calculateLiuren()">排盤計算</button>
+        <button onclick="calculateLiuren()">時辰全盤排盤</button>
     </div>
 
     <!-- 手機響應式外框容器 -->
@@ -333,7 +333,7 @@
         <!-- 內環中心空白處的資訊面板 (動態填滿吉凶色彩) -->
         <div class="center-panel" id="center-info-box">
             <div class="center-title" id="center-title">小六壬</div>
-            <div class="center-desc" id="center-desc">請輸入月日或下方靈能序列進行排盤</div>
+            <div class="center-desc" id="center-desc">請使用上方時辰排盤或下方獨立起卦</div>
         </div>
 
         <svg class="ring-container" viewBox="-230 -230 460 460">
@@ -425,9 +425,9 @@
         </svg>
     </div>
 
-    <!-- 下方賽博靈能解碼序列面板 (彈性輸入) -->
+    <!-- 下方獨立起卦面板 (不分時辰，純數列連算結果) -->
     <div class="decoder-panel">
-        <div class="decoder-title">【 靈能解碼序列 (任意填寫 1-9) 】</div>
+        <div class="decoder-title">【 獨立起卦序列 (任意填寫數字) 】</div>
         <div class="decoder-inputs" id="decoder-container">
             <input type="number" min="1" max="9" placeholder="">
             <input type="number" min="1" max="9" placeholder="">
@@ -438,19 +438,20 @@
             <input type="number" min="1" max="9" placeholder="">
             <input type="number" min="1" max="9" placeholder="">
         </div>
-        <button class="decoder-btn" onclick="calculateDecoderSequence()">動態序列推算</button>
+        <button class="decoder-btn" onclick="calculateIndependentDivination()">起卦推算結果</button>
     </div>
 
     <script>
         const liurenData = [
+            { name: "大安", type: "lucky", desc: "身安穩，萬事吉 (大吉)" },
             { name: "留連", type: "unlucky", desc: "主未詳，事難成 (平/凶)" },
             { name: "速喜", type: "lucky", desc: "人便至，喜訊到 (大吉)" },
             { name: "赤口", type: "unlucky", desc: "主口舌，官司爭 (凶)" },
             { name: "小吉", type: "lucky", desc: "人來喜，謀事通 (吉)" },
-            { name: "空亡", type: "unlucky", desc: "音信稀，事不順 (凶)" },
-            { name: "大安", type: "lucky", desc: "身安穩，萬事吉 (大吉)" }
+            { name: "空亡", type: "unlucky", desc: "音信稀，事不順 (凶)" }
         ];
 
+        // 傳統六宮順序對應索引：0:大安, 1:留連, 2:速喜, 3:赤口, 4:小吉, 5:空亡
         const branchNames = ["子時", "丑時", "寅時", "卯時", "辰時", "巳時", "午時", "未時", "申時", "酉時", "戌時", "亥時"];
         let currentHourlyResults = [];
 
@@ -467,12 +468,18 @@
             }
         }
 
-        function selectInner(index) {
+        function clearAllHighlights() {
             for (let i = 0; i < 6; i++) {
                 document.getElementById(`inner-${i}`).classList.remove('active');
             }
+            for (let i = 0; i < 12; i++) {
+                document.getElementById(`outer-${i}`).classList.remove('active');
+            }
+        }
+
+        function selectInner(index) {
+            clearAllHighlights();
             document.getElementById(`inner-${index}`).classList.add('active');
-            
             let info = liurenData[index];
             updateCenterPanel(info.name, info.desc, info.type);
         }
@@ -494,10 +501,11 @@
 
                 updateCenterPanel(`${branchNames[index]}：${info.name}`, info.desc, info.type);
             } else {
-                updateCenterPanel(branchNames[index], "請先進行排盤", "");
+                updateCenterPanel(branchNames[index], "請先進行時辰全盤", "");
             }
         }
 
+        // 上方：傳統時辰全盤邏輯
         function calculateLiuren() {
             let month = parseInt(document.getElementById('lunar-month').value);
             let day = parseInt(document.getElementById('lunar-day').value);
@@ -507,11 +515,12 @@
                 return;
             }
 
-            let monthLanding = (5 + (month - 1)) % 6;
+            // 月起大安(0)：月-1步
+            let monthLanding = (0 + (month - 1)) % 6;
+            // 月落點起日：日-1步
             let dayLanding = (monthLanding + (day - 1)) % 6;
 
             currentHourlyResults = [];
-
             for (let hour = 1; hour <= 12; hour++) {
                 let finalLanding = (dayLanding + (hour - 1)) % 6;
                 currentHourlyResults.push(finalLanding);
@@ -520,39 +529,37 @@
             selectOuter(0);
         }
 
-        // 彈性序列推算邏輯：自動抓取所有有填寫的格子，依序累加推演
-        function calculateDecoderSequence() {
+        // 下方：獨立彈性起卦邏輯（不分時辰，純粹累加步數求最終落點）
+        function calculateIndependentDivination() {
             let inputs = document.getElementById('decoder-container').getElementsByTagName('input');
-            let sequenceValues = [];
+            let totalSteps = 0;
+            let count = 0;
 
             for (let i = 0; i < inputs.length; i++) {
                 let valStr = inputs[i].value.trim();
                 if (valStr !== "") {
                     let val = parseInt(valStr);
-                    if (isNaN(val) || val < 1 || val > 9) {
-                        alert(`第 ${i + 1} 格輸入有誤，請填入 1 到 9 之間的數字`);
+                    if (isNaN(val)) {
+                        alert(`第 ${i + 1} 格輸入有誤`);
                         return;
                     }
-                    sequenceValues.push(val);
+                    totalSteps += val;
+                    count++;
                 }
             }
 
-            if (sequenceValues.length === 0) {
-                alert("請至少在任意格子中填入一個數字 (1-9)");
+            if (count === 0) {
+                alert("請至少在任意格子中填入一個數字");
                 return;
             }
 
-            currentHourlyResults = [];
-            let currentAccumulator = 0;
+            // 正統小六壬起卦：以大安(0)為起點，總步數扣掉 1 後取模 6
+            // 例如總步數 1 落在起點大安 ((0 + 1 - 1) % 6 = 0)
+            let finalLanding = (totalSteps - 1) % 6;
+            if (finalLanding < 0) finalLanding = 0;
 
-            // 依據實際有填寫的數字序列，對 12 個時辰依序循環加總取模
-            for (let hour = 0; hour < 12; hour++) {
-                currentAccumulator += sequenceValues[hour % sequenceValues.length];
-                let finalLanding = currentAccumulator % 6;
-                currentHourlyResults.push(finalLanding);
-            }
-
-            selectOuter(0);
+            currentHourlyResults = []; // 清除時辰全盤狀態
+            selectInner(finalLanding);
         }
     </script>
 </body>
