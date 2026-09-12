@@ -42,7 +42,7 @@
             color: var(--text-color);
         }
 
-        /* 手機與電腦共用控制面板 */
+        /* 控制面板通用樣式 */
         .control-panel {
             display: flex;
             gap: 10px;
@@ -51,7 +51,7 @@
             border: 1px solid var(--ring-border);
             padding: 10px 18px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 10;
         }
@@ -97,6 +97,74 @@
 
         .control-panel button:active {
             background: var(--patina-glow);
+            color: var(--bg-deep);
+        }
+
+        /* 下方 8 格解碼陣列面板專屬樣式 */
+        .decoder-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(22, 18, 14, 0.95);
+            border: 1px solid var(--ring-border);
+            padding: 12px 18px;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+            max-width: 450px;
+            width: 100%;
+        }
+
+        .decoder-title {
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: var(--warning-glow);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .decoder-inputs {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .decoder-inputs input {
+            width: 38px;
+            height: 38px;
+            background: #070605;
+            border: 1px solid var(--ring-border);
+            color: var(--warning-glow);
+            text-align: center;
+            font-size: 16px;
+            border-radius: 4px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .decoder-inputs input:focus {
+            border-color: var(--warning-glow);
+            box-shadow: 0 0 8px rgba(255, 170, 0, 0.4);
+        }
+
+        .decoder-btn {
+            background: #221a14;
+            color: var(--warning-glow);
+            border: 1px solid var(--warning-glow);
+            padding: 6px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .decoder-btn:active {
+            background: var(--warning-glow);
             color: var(--bg-deep);
         }
 
@@ -229,14 +297,18 @@
 
         /* 手機直向螢幕微調支援 */
         @media (max-width: 480px) {
-            .control-panel {
+            .control-panel, .decoder-panel {
                 width: 100%;
-                justify-content: center;
                 padding: 8px 10px;
                 margin-bottom: 10px;
             }
             .control-panel input {
                 width: 50px;
+            }
+            .decoder-inputs input {
+                width: 32px;
+                height: 34px;
+                font-size: 14px;
             }
         }
     </style>
@@ -260,113 +332,89 @@
         <!-- 內環中心空白處的資訊面板 (動態填滿吉凶色彩) -->
         <div class="center-panel" id="center-info-box">
             <div class="center-title" id="center-title">小六壬</div>
-            <div class="center-desc" id="center-desc">請輸入月日進行排盤</div>
+            <div class="center-desc" id="center-desc">請輸入月日或下方八格進行排盤</div>
         </div>
 
         <svg class="ring-container" viewBox="-230 -230 460 460">
             
-            <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130，完美修正內緣) ================= -->
+            <!-- ================= 區塊一：內環六宮 ================= -->
             <g id="inner-layer">
-                <!-- 01. 留連 -->
                 <g class="inner-group" onclick="selectInner(0)" id="inner-0">
                     <path class="ring-path" d="M 35 -60.62 L 65 -112.58 A 130 130 0 0 1 130 0 L 70 0 A 70 70 0 0 0 35 -60.62 Z" />
                     <text class="inner-text" x="75" y="-65">留</text>
                     <text class="inner-text" x="95" y="-30">連</text>
                 </g>
-
-                <!-- 02. 速喜 -->
                 <g class="inner-group" onclick="selectInner(1)" id="inner-1">
                     <path class="ring-path" d="M 70 0 L 130 0 A 130 130 0 0 1 65 112.58 L 35 60.62 A 70 70 0 0 0 70 0 Z" />
                     <text class="inner-text" x="95" y="30">速</text>
                     <text class="inner-text" x="75" y="65">喜</text>
                 </g>
-
-                <!-- 03. 赤口 -->
                 <g class="inner-group" onclick="selectInner(2)" id="inner-2">
                     <path class="ring-path" d="M 35 60.62 L 65 112.58 A 130 130 0 0 1 -65 112.58 L -35 60.62 A 70 70 0 0 0 35 60.62 Z" />
                     <text class="inner-text" x="0" y="100">赤 口</text>
                 </g>
-
-                <!-- 04. 小吉 -->
                 <g class="inner-group" onclick="selectInner(3)" id="inner-3">
                     <path class="ring-path" d="M -35 60.62 L -65 112.58 A 130 130 0 0 1 -130 0 L -70 0 A 70 70 0 0 0 -35 60.62 Z" />
                     <text class="inner-text" x="-95" y="30">小</text>
                     <text class="inner-text" x="-75" y="65">吉</text>
                 </g>
-
-                <!-- 05. 空亡 -->
                 <g class="inner-group" onclick="selectInner(4)" id="inner-4">
                     <path class="ring-path" d="M -70 0 L -130 0 A 130 130 0 0 1 -65 -112.58 L -35 -60.62 A 70 70 0 0 0 -70 0 Z" />
                     <text class="inner-text" x="-75" y="-65">空</text>
                     <text class="inner-text" x="-95" y="-30">亡</text>
                 </g>
-
-                <!-- 06. 大安 -->
                 <g class="inner-group" onclick="selectInner(5)" id="inner-5">
                     <path class="ring-path" d="M -35 -60.62 L -65 -112.58 A 130 130 0 0 1 65 -112.58 L 35 -60.62 A 70 70 0 0 0 -35 -60.62 Z" />
                     <text class="inner-text" x="0" y="-100">大 安</text>
                 </g>
             </g>
 
-
-            <!-- ================= 區塊二：外環十二地支 (半徑 180 ~ 210) ================= -->
+            <!-- ================= 區塊二：外環十二地支 ================= -->
             <g id="outer-layer">
-                <!-- 01. 子 -->
                 <g class="outer-group" onclick="selectOuter(0)" id="outer-0">
                     <path class="ring-path" d="M -46.56 -173.88 A 180 180 0 0 1 46.56 -173.88 L 54.32 -202.87 A 210 210 0 0 0 -54.32 -202.87 Z" />
                     <text class="outer-text" x="0" y="-195">子</text>
                 </g>
-                <!-- 02. 丑 -->
                 <g class="outer-group" onclick="selectOuter(1)" id="outer-1">
                     <path class="ring-path" d="M 46.56 -173.88 A 180 180 0 0 1 127.28 -127.28 L 148.49 -148.49 A 210 210 0 0 0 54.32 -202.87 Z" />
                     <text class="outer-text" x="100" y="-170">丑</text>
                 </g>
-                <!-- 03. 寅 -->
                 <g class="outer-group" onclick="selectOuter(2)" id="outer-2">
                     <path class="ring-path" d="M 127.28 -127.28 A 180 180 0 0 1 173.88 -46.56 L 202.87 -54.32 A 210 210 0 0 0 148.49 -148.49 Z" />
                     <text class="outer-text" x="167" y="-100">寅</text>
                 </g>
-                <!-- 04. 卯 -->
                 <g class="outer-group" onclick="selectOuter(3)" id="outer-3">
                     <path class="ring-path" d="M 173.88 -46.56 A 180 180 0 0 1 173.88 46.56 L 202.87 54.32 A 210 210 0 0 0 202.87 -54.32 Z" />
                     <text class="outer-text" x="194" y="0">卯</text>
                 </g>
-                <!-- 05. 辰 -->
                 <g class="outer-group" onclick="selectOuter(4)" id="outer-4">
                     <path class="ring-path" d="M 173.88 46.56 A 180 180 0 0 1 127.28 127.28 L 148.49 148.49 A 210 210 0 0 0 202.87 54.32 Z" />
                     <text class="outer-text" x="167" y="100">辰</text>
                 </g>
-                <!-- 06. 巳 -->
                 <g class="outer-group" onclick="selectOuter(5)" id="outer-5">
                     <path class="ring-path" d="M 127.28 127.28 A 180 180 0 0 1 46.56 173.88 L 54.32 202.87 A 210 210 0 0 0 148.49 148.49 Z" />
                     <text class="outer-text" x="100" y="167">巳</text>
                 </g>
-                <!-- 07. 午 -->
                 <g class="outer-group" onclick="selectOuter(6)" id="outer-6">
                     <path class="ring-path" d="M 46.56 173.88 A 180 180 0 0 1 -46.56 173.88 L -54.32 202.87 A 210 210 0 0 0 54.32 202.87 Z" />
                     <text class="outer-text" x="0" y="195">午</text>
                 </g>
-                <!-- 08. 未 -->
                 <g class="outer-group" onclick="selectOuter(7)" id="outer-7">
                     <path class="ring-path" d="M -46.56 173.88 A 180 180 0 0 1 -127.28 127.28 L -148.49 148.49 A 210 210 0 0 0 -54.32 202.87 Z" />
                     <text class="outer-text" x="-100" y="167">未</text>
                 </g>
-                <!-- 09. 申 -->
                 <g class="outer-group" onclick="selectOuter(8)" id="outer-8">
                     <path class="ring-path" d="M -127.28 127.28 A 180 180 0 0 1 -173.88 46.56 L -202.87 54.32 A 210 210 0 0 0 -148.49 148.49 Z" />
                     <text class="outer-text" x="-167" y="100">申</text>
                 </g>
-                <!-- 10. 酉 -->
                 <g class="outer-group" onclick="selectOuter(9)" id="outer-9">
                     <path class="ring-path" d="M -173.88 46.56 A 180 180 0 0 1 -173.88 -46.56 L -202.87 -54.32 A 210 210 0 0 0 -202.87 54.32 Z" />
                     <text class="outer-text" x="-194" y="0">酉</text>
                 </g>
-                <!-- 11. 戌 -->
                 <g class="outer-group" onclick="selectOuter(10)" id="outer-10">
                     <path class="ring-path" d="M -173.88 -46.56 A 180 180 0 0 1 -127.28 -127.28 L -148.49 -148.49 A 210 210 0 0 0 -202.87 -54.32 Z" />
                     <text class="outer-text" x="-167" y="-100">戌</text>
                 </g>
-                <!-- 12. 亥 -->
                 <g class="outer-group" onclick="selectOuter(11)" id="outer-11">
                     <path class="ring-path" d="M -127.28 -127.28 A 180 180 0 0 1 -46.56 -173.88 L -54.32 -202.87 A 210 210 0 0 0 -148.49 -148.49 Z" />
                     <text class="outer-text" x="-100" y="-170">亥</text>
@@ -374,6 +422,22 @@
             </g>
 
         </svg>
+    </div>
+
+    <!-- 下方 8 格賽博解碼序列面板 -->
+    <div class="decoder-panel">
+        <div class="decoder-title">【 八方靈能解碼序列 (1-9) 】</div>
+        <div class="decoder-inputs" id="decoder-container">
+            <input type="number" min="1" max="9" placeholder="1">
+            <input type="number" min="1" max="9" placeholder="2">
+            <input type="number" min="1" max="9" placeholder="3">
+            <input type="number" min="1" max="9" placeholder="4">
+            <input type="number" min="1" max="9" placeholder="5">
+            <input type="number" min="1" max="9" placeholder="6">
+            <input type="number" min="1" max="9" placeholder="7">
+            <input type="number" min="1" max="9" placeholder="8">
+        </div>
+        <button class="decoder-btn" onclick="calculateDecoderSequence()">陣列序列推算</button>
     </div>
 
     <script>
@@ -429,7 +493,7 @@
 
                 updateCenterPanel(`${branchNames[index]}：${info.name}`, info.desc, info.type);
             } else {
-                updateCenterPanel(branchNames[index], "請先輸入月日進行排盤", "");
+                updateCenterPanel(branchNames[index], "請先進行排盤", "");
             }
         }
 
@@ -449,6 +513,34 @@
 
             for (let hour = 1; hour <= 12; hour++) {
                 let finalLanding = (dayLanding + (hour - 1)) % 6;
+                currentHourlyResults.push(finalLanding);
+            }
+
+            selectOuter(0);
+        }
+
+        // 8格序列推算邏輯：依序累加輸入的數字 (1-9)，對應到 12 時辰的落點分佈
+        function calculateDecoderSequence() {
+            let inputs = document.getElementById('decoder-container').getElementsByTagName('input');
+            let sequenceValues = [];
+
+            for (let i = 0; i < inputs.length; i++) {
+                let val = parseInt(inputs[i].value);
+                if (isNaN(val) || val < 1 || val > 9) {
+                    alert(`第 ${i + 1} 格請輸入 1 到 9 之間的數字`);
+                    return;
+                }
+                sequenceValues.push(val);
+            }
+
+            currentHourlyResults = [];
+            let currentAccumulator = 0;
+
+            // 以 8 個數字作為連續推演因子，對 12 個時辰依序疊加取模 (對應 6 宮小六壬)
+            for (let hour = 0; hour < 12; hour++) {
+                // 每一個時辰引入對應的序列數字加總推進
+                currentAccumulator += sequenceValues[hour % sequenceValues.length];
+                let finalLanding = currentAccumulator % 6;
                 currentHourlyResults.push(finalLanding);
             }
 
