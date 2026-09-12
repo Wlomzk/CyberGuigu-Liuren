@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 核心環狀介面</title>
+    <title>CyberGuigu-Liuren | 圓環法陣核心</title>
     <style>
         :root {
             --bg-deep: #070605;
+            --ring-bg: #16120e;
+            --ring-border: #523e2d;
             --patina-glow: #00ffaa;
+            --text-color: #bfa381;
         }
 
         body {
@@ -23,83 +26,103 @@
 
         /* 
           【尺寸與寬度調整區】
-          修改下面 .ring-wrapper 的 width 和 height 即可改變整體法陣大小
+          修改下面 svg 元素的 width 和 height 即可調整整體法陣大小
         */
-        .ring-wrapper {
-            position: relative;
-            width: 320px; /* 這裡可自行調整整體寬度 */
-            height: 320px; /* 這裡可自行調整整體高度 */
-            border-radius: 50%;
-            border: 2px dashed rgba(138, 111, 85, 0.4); /* 空心環形外框 */
+        .ring-container {
+            width: 320px;  /* 整體寬度 */
+            height: 320px; /* 整體高度 */
+            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
         }
 
-        /* 圍繞中心平均分配的六個區塊 */
-        .palace {
-            position: absolute;
-            /* 讓區塊初始定位在圓心，再透過 transform 旋轉並推到半徑外側 */
-            top: calc(50% - 22px); 
-            left: calc(50% - 40px);
-            width: 80px;
-            height: 44px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: rgba(26, 21, 16, 0.85);
-            border: 1px solid #6b533c;
-            border-radius: 6px;
-            color: #bfa381;
-            font-weight: 600;
-            font-size: 14px;
-            letter-spacing: 1px;
+        /* 圓環扇形區塊基礎樣式 */
+        .palace-path {
+            fill: var(--ring-bg);
+            stroke: var(--ring-border);
+            stroke-width: 1.5;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
             transition: all 0.3s ease;
         }
 
-        /* 
-          利用數學極座標原理：
-          1. rotate(角度) 決定方塊在圓周上的方向
-          2. translate(距離) 決定距離中心的半徑範圍 (此處設 105px 讓其完美環繞)
-          3. 再次反向 rotate(-角度) 確保文字永遠保持水平、不旋轉、不變形
-        */
-        .p0 { transform: rotate(-90deg) translate(105px) rotate(90deg); }   /* 大安 (頂部) */
-        .p1 { transform: rotate(-30deg) translate(105px) rotate(30deg); }   /* 留連 */
-        .p2 { transform: rotate(30deg) translate(105px) rotate(-30deg); }   /* 速喜 */
-        .p3 { transform: rotate(90deg) translate(105px) rotate(-90deg); }   /* 赤口 (底部) */
-        .p4 { transform: rotate(150deg) translate(105px) rotate(-150deg); } /* 小吉 */
-        .p5 { transform: rotate(210deg) translate(105px) rotate(-210deg); } /* 空亡 */
-
-        /* 區塊互動與點亮狀態 */
-        .palace:hover {
-            border-color: var(--patina-glow);
-            color: var(--patina-glow);
+        /* 懸停與點亮效果 */
+        .palace-path:hover {
+            fill: #221a14;
+            stroke: var(--patina-glow);
         }
 
-        .palace.active {
-            background: rgba(0, 255, 170, 0.15);
-            border-color: var(--patina-glow);
-            color: var(--patina-glow);
-            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
+        .palace-path.active {
+            fill: rgba(0, 255, 170, 0.12);
+            stroke: var(--patina-glow);
+            filter: drop-shadow(0 0 8px var(--patina-glow));
+        }
+
+        /* 區塊內的文字樣式 (保持水平、不旋轉) */
+        .palace-text {
+            fill: var(--text-color);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none; /* 讓點擊事件直接穿透到背後的 path */
+            transition: fill 0.3s ease;
+        }
+
+        .palace-group.active .palace-text {
+            fill: var(--patina-glow);
+            text-shadow: 0 0 8px var(--patina-glow);
         }
     </style>
 </head>
 <body>
 
-    <div class="ring-wrapper" id="mainRing">
-        <div class="palace p0" id="palace-0" onclick="selectPalace(0)">大安</div>
-        <div class="palace p1" id="palace-1" onclick="selectPalace(1)">留連</div>
-        <div class="palace p2" id="palace-2" onclick="selectPalace(2)">速喜</div>
-        <div class="palace p3" id="palace-3" onclick="selectPalace(3)">赤口</div>
-        <div class="palace p4" id="palace-4" onclick="selectPalace(4)">小吉</div>
-        <div class="palace p5" id="palace-5" onclick="selectPalace(5)">空亡</div>
-    </div>
+    <svg class="ring-container" viewBox="0 0 300 300">
+        <!-- 
+          中心點固定在 (150, 150)
+          外徑 R = 130, 內徑 r = 70 (中間空心半徑 70)
+        -->
+        
+        <!-- 01. 大安 (上方) -->
+        <g class="palace-group" onclick="selectPalace(0)" id="group-0">
+            <path class="palace-path" d="M 115 89.38 L 85 37.42 A 130 130 0 0 1 215 37.42 L 185 89.38 A 70 70 0 0 0 115 89.38 Z" />
+            <text class="palace-text" x="150" y="52">大安</text>
+        </g>
+
+        <!-- 02. 留連 (右上方) -->
+        <g class="palace-group" onclick="selectPalace(1)" id="group-1">
+            <path class="palace-path" d="M 185 89.38 L 215 37.42 A 130 130 0 0 1 262.58 135 L 210.62 135 A 70 70 0 0 0 185 89.38 Z" />
+            <text class="palace-text" x="228" y="100">留連</text>
+        </g>
+
+        <!-- 03. 速喜 (右下方) -->
+        <g class="palace-group" onclick="selectPalace(2)" id="group-2">
+            <path class="palace-path" d="M 210.62 165 L 262.58 165 A 130 130 0 0 1 215 262.58 L 185 210.62 A 70 70 0 0 0 210.62 165 Z" />
+            <text class="palace-text" x="228" y="200">速喜</text>
+        </g>
+
+        <!-- 04. 赤口 (下方) -->
+        <g class="palace-group" onclick="selectPalace(3)" id="group-3">
+            <path class="palace-path" d="M 185 210.62 L 215 262.58 A 130 130 0 0 1 85 262.58 L 115 210.62 A 70 70 0 0 0 185 210.62 Z" />
+            <text class="palace-text" x="150" y="248">赤口</text>
+        </g>
+
+        <!-- 05. 小吉 (左下方) -->
+        <g class="palace-group" onclick="selectPalace(4)" id="group-4">
+            <path class="palace-path" d="M 115 210.62 L 85 262.58 A 130 130 0 0 1 37.42 165 L 89.38 165 A 70 70 0 0 0 115 210.62 Z" />
+            <text class="palace-text" x="72" y="200">小吉</text>
+        </g>
+
+        <!-- 06. 空亡 (左上方) -->
+        <g class="palace-group" onclick="selectPalace(5)" id="group-5">
+            <path class="palace-path" d="M 89.38 135 L 37.42 135 A 130 130 0 0 1 85 37.42 L 115 89.38 A 70 70 0 0 0 89.38 135 Z" />
+            <text class="palace-text" x="72" y="100">空亡</text>
+        </svg>
 
     <script>
         function selectPalace(index) {
             for (let i = 0; i < 6; i++) {
-                document.getElementById(`palace-${i}`).classList.remove('active');
+                document.getElementById(`group-${i}`).classList.remove('active');
             }
-            document.getElementById(`palace-${index}`).classList.add('active');
+            document.getElementById(`group-${index}`).classList.add('active');
         }
     </script>
 </body>
