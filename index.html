@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberGuigu-Liuren | 青銅流光賽博小六壬</title>
+    <style>
+        :root {
+            --bg-color: #0c0b0a;
+            --bronze-dark: #1a1714;
+            --bronze-metal: #3d342b;
+            --bronze-border: #6b5842;
+            --patina-glow: #00ffaa; /* 靈能青銅綠光 */
+            --amber-glow: #ffb703;
+            --text-main: #f3f0ea;
+            --text-muted: #a39888;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            max-width: 480px;
+            margin: 20px auto;
+            padding: 20px;
+            background-image: radial-gradient(circle at 50% 30%, rgba(61, 52, 43, 0.4) 0%, transparent 70%);
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0;
+            background: linear-gradient(135deg, #e0c38c, var(--patina-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 1.5px;
+        }
+
+        .subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* 圓環法陣容器 */
+        .ring-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .liuren-ring {
+            position: relative;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--bronze-dark) 60%, var(--bronze-metal) 100%);
+            border: 3px solid var(--bronze-border);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(0, 0, 0, 0.9);
+        }
+
+        .palace {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            transform-origin: bottom right;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 18px;
+            box-sizing: border-box;
+            color: var(--text-muted);
+            font-weight: bold;
+            font-size: 13px;
+            border: 1px solid rgba(107, 88, 66, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .p1 { transform: rotate(0deg) skewY(-30deg); }   /* 大安 */
+        .p2 { transform: rotate(60deg) skewY(-30deg); }  /* 留連 */
+        .p3 { transform: rotate(120deg) skewY(-30deg); } /* 速喜 */
+        .p4 { transform: rotate(180deg) skewY(-30deg); } /* 赤口 */
+        .p5 { transform: rotate(240deg) skewY(-30deg); } /* 小吉 */
+        .p6 { transform: rotate(300deg) skewY(-30deg); } /* 空亡 */
+
+        .palace span {
+            transform: skewY(30deg);
+            display: block;
+            position: absolute;
+            top: 14px;
+            letter-spacing: 1px;
+        }
+
+        /* 啟動流光與高亮狀態 */
+        .palace.active {
+            color: var(--patina-glow);
+            text-shadow: 0 0 12px var(--patina-glow);
+            border-color: rgba(0, 255, 170, 0.4);
+            background: radial-gradient(circle, rgba(0, 255, 170, 0.08) 0%, transparent 70%);
+        }
+
+        /* 控制面板卡片 */
+        .card {
+            background: rgba(26, 23, 20, 0.85);
+            border: 1px solid var(--bronze-border);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            background: rgba(12, 11, 10, 0.8);
+            border: 1px solid var(--bronze-border);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: var(--patina-glow);
+            box-shadow: 0 0 8px rgba(0, 255, 170, 0.2);
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+            background: linear-gradient(135deg, #4a3c2c, #2b231a);
+            color: #e0c38c;
+            padding: 12px;
+            border: 1px solid var(--bronze-border);
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            border-color: var(--patina-glow);
+            color: var(--patina-glow);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.15);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: rgba(12, 11, 10, 0.6);
+            color: var(--text-muted);
+        }
+
+        .result-box {
+            margin-top: 18px;
+            padding: 15px;
+            background: rgba(0, 255, 170, 0.04);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+            border-radius: 6px;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--patina-glow);
+            margin-bottom: 6px;
+            text-shadow: 0 0 8px rgba(0, 255, 170, 0.3);
+        }
+
+        .result-desc {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 25px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>CyberGuigu-Liuren</h1>
+        <div class="subtitle">Bronze Protocol // 靈能青銅推演系統</div>
+    </div>
+
+    <!-- 青銅圓環法陣介面 -->
+    <div class="ring-container">
+        <div class="liuren-ring">
+            <div class="palace p1" id="palace-0"><span>大安</span></div>
+            <div class="palace p2" id="palace-1"><span>留連</span></div>
+            <div class="palace p3" id="palace-2"><span>速喜</span></div>
+            <div class="palace p4" id="palace-3"><span>赤口</span></div>
+            <div class="palace p5" id="palace-4"><span>小吉</span></div>
+            <div class="palace p6" id="palace-5"><span>空亡</span></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="input-group">
+            <label for="palaceMonth">1. 空間 / 起始參數 (月)</label>
+            <input type="number" id="palaceMonth" placeholder="例：農曆月份">
+        </div>
+
+        <div class="input-group">
+            <label for="palaceDay">2. 時間推移 (日)</label>
+            <input type="number" id="palaceDay" placeholder="例：農曆日期">
+        </div>
+
+        <div class="input-group">
+            <label for="palaceHour">3. 時刻變數 (時辰序 1-12)</label>
+            <input type="number" id="palaceHour" placeholder="例：時辰序號">
+        </div>
+
+        <div class="btn-row">
+            <button class="btn-secondary" onclick="autoFillTime()">⚡ 同步時空</button>
+            <button onclick="runLiuRenAnimation()">執行靈能推演</button>
+        </div>
+
+        <div class="result-box" id="resultBox">
+            <div class="result-title" id="resultTitle"></div>
+            <div class="result-desc" id="resultDesc"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        BRONZE NEURAL CORE // SECURE LOCAL ENVIRONMENT
+    </div>
+
+    <script>
+        const palaces = [
+            { name: "大安", desc: "【身心皆安】主穩健、不動、一切如常。磁場平穩，求吉最穩，適合按部就班推進。" },
+            { name: "留連", desc: "【拖延糾纏】主卡關、滯礙或需要長期磨合。需放慢節奏，以守為攻應對阻力。" },
+            { name: "速喜", desc: "【突發喜訊】快、喜慶、好消息。能量高張，主近期有順遂與意外收穫。" },
+            { name: "赤口", desc: "【口舌爭執】破財或溝通磁場摩擦。宜低調保守，慎防無謂的言語衝突。" },
+            { name: "小吉", desc: "【貴人相助】謀事可成，帶有柔順與小確幸的磁場，利於人際與合作。" },
+            { name: "空亡", desc: "【虛無徒勞】落空或結果不如預期。提醒需跳脫框架，適時調整方向。" }
+        ];
+
+        function getRemainder(num) {
+            let rem = num % 6;
+            return rem === 0 ? 5 : rem - 1; 
+        }
+
+        function clearHighlights() {
+            for (let i = 0; i < 6; i++) {
+                document.getElementById(`palace-${i}`).classList.remove('active');
+            }
+        }
+
+        function runLiuRenAnimation() {
+            let m = parseInt(document.getElementById('palaceMonth').value);
+            let d = parseInt(document.getElementById('palaceDay').value);
+            let h = parseInt(document.getElementById('palaceHour').value);
+
+            if (isNaN(m) || isNaN(d) || isNaN(h)) {
+                alert("系統提示：請完整輸入所有推演參數。");
+                return;
+            }
+
+            clearHighlights();
+
+            // 計算最終落點
+            let step1 = getRemainder(m);                           
+            let step2 = (step1 + d - 1) % 6;                       
+            let finalStep = (step2 + h - 1) % 6;                   
+
+            // 模擬手指掐算流光效果（依序閃爍或直接高亮）
+            let currentLight = step1;
+            let count = 0;
+            // 這裡可以做簡單的動畫切換，為了穩健我們先直接點亮終端，或加個微小延遲感
+            setTimeout(() => {
+                document.getElementById(`palace-${finalStep}`).classList.add('active');
+                
+                let result = palaces[finalStep];
+                let box = document.getElementById('resultBox');
+                let title = document.getElementById('resultTitle');
+                let desc = document.getElementById('resultDesc');
+
+                box.style.display = "block";
+                title.innerHTML = `🔮 靈能卦象落點：${result.name}`;
+                desc.innerHTML = `${result.desc}`;
+            }, 200);
+        }
+
+        function autoFillTime() {
+            let now = new Date();
+            let month = now.getMonth() + 1;
+            let date = now.getDate();
+            let hour = now.getHours();
+            let shichen = Math.floor((hour + 1) / 2) % 12 + 1;
+
+            document.getElementById('palaceMonth').value = month;
+            document.getElementById('palaceDay').value = date;
+            document.getElementById('palaceHour').value = shichen;
+        }
+    </script>
+</body>
+</html>
