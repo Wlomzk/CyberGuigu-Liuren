@@ -332,7 +332,7 @@
         <label for="lunar-day">農曆日:</label>
         <input type="number" id="lunar-day" min="1" max="30" placeholder="1-30">
         
-        <button onclick="calculateLiuren()">偏財時辰排盤</button>
+        <button onclick="calculateLiuren()">時辰排盤</button>
     </div>
 
     <!-- 手機響應式外框容器 -->
@@ -558,7 +558,7 @@
                 ? `【偏財吉時】${targetHoursText.join('、')}` 
                 : "此組月日排盤暫無速喜與小吉偏財時辰";
             
-            updateCenterPanel(`農曆 ${month}月 ${day}日 偏財排盤`, summaryDesc, "lucky");
+            updateCenterPanel(` ${month}月 ${day}日 排盤`, summaryDesc, "lucky");
         }
 
         // 下方：正統多數動態連續起卦邏輯（含 0 與負數防呆）
