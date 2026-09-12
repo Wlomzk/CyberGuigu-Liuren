@@ -21,13 +21,6 @@
             --text-unlucky: #ff9999;
 
             --warning-glow: #ffaa00;
-            
-            /* 偏財運專屬視覺色調 (速喜/小吉) */
-            --wealth-glow: #ffcc00;
-            --wealth-bg: rgba(77, 61, 20, 0.85);
-            --wealth-border: #ffaa00;
-            --wealth-text: #ffe680;
-
             --text-color: #bfa381;
         }
 
@@ -80,7 +73,6 @@
             outline: none;
         }
 
-        /* 隱除數字輸入上下箭頭 */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -211,18 +203,18 @@
             filter: drop-shadow(0 0 8px var(--patina-glow));
         }
 
-        /* 內環「偏財運高亮」狀態 (速喜、小吉專屬) */
-        .inner-group.wealth-active .ring-path {
-            fill: rgba(255, 204, 0, 0.25);
-            stroke: var(--wealth-glow);
-            filter: drop-shadow(0 0 12px var(--wealth-glow));
-        }
-
         /* 外環十二地支選取狀態 */
         .outer-group.active .ring-path {
             fill: rgba(255, 170, 0, 0.15);
             stroke: var(--warning-glow);
             filter: drop-shadow(0 0 8px var(--warning-glow));
+        }
+
+        /* 外環符合速喜或小吉時的特殊高亮標記 */
+        .outer-group.highlight-target .ring-path {
+            fill: rgba(255, 170, 0, 0.25);
+            stroke: var(--warning-glow);
+            filter: drop-shadow(0 0 10px rgba(255, 170, 0, 0.6));
         }
 
         .inner-text {
@@ -241,11 +233,6 @@
             text-shadow: 0 0 6px var(--patina-glow);
         }
 
-        .inner-group.wealth-active .inner-text {
-            fill: var(--wealth-glow);
-            text-shadow: 0 0 8px var(--wealth-glow);
-        }
-
         .outer-text {
             fill: var(--text-color);
             font-size: 13px;
@@ -256,9 +243,11 @@
             transition: fill 0.3s ease;
         }
 
-        .outer-group.active .outer-text {
+        .outer-group.active .outer-text,
+        .outer-group.highlight-target .outer-text {
             fill: var(--warning-glow);
             text-shadow: 0 0 6px var(--warning-glow);
+            font-weight: bold;
         }
 
         /* 中心圓形解說面板 (預設狀態) */
@@ -315,15 +304,6 @@
         .center-panel.panel-unlucky .center-title { color: var(--text-unlucky); }
         .center-panel.panel-unlucky .center-desc { color: #ffe6e6; }
 
-        /* 偏財運吉時專屬面板風格 (速喜、小吉) */
-        .center-panel.panel-wealth {
-            background: var(--wealth-bg);
-            border-color: var(--wealth-border);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 0 15px rgba(255, 204, 0, 0.5);
-        }
-        .center-panel.panel-wealth .center-title { color: var(--wealth-text); text-shadow: 0 0 6px var(--wealth-glow); }
-        .center-panel.panel-wealth .center-desc { color: #fff9e6; }
-
         /* 手機直向螢幕微調支援 */
         @media (max-width: 480px) {
             .control-panel, .decoder-panel {
@@ -352,7 +332,7 @@
         <label for="lunar-day">農曆日:</label>
         <input type="number" id="lunar-day" min="1" max="30" placeholder="1-30">
         
-        <button onclick="calculateLiuren()">時辰排盤</button>
+        <button onclick="calculateLiuren()">偏財時辰排盤</button>
     </div>
 
     <!-- 手機響應式外框容器 -->
@@ -360,8 +340,8 @@
         
         <!-- 內環中心空白處的資訊面板 (動態填滿吉凶色彩) -->
         <div class="center-panel" id="center-info-box">
-            <div class="center-title" id="center-title">小六壬</div>
-            <div class="center-desc" id="center-desc">請使用上方時辰排盤或下方獨立起卦</div>
+            <div class="center-title" id="center-title">小六壬偏財全解</div>
+            <div class="center-desc" id="center-desc">輸入月日後，將自動呈現排盤變化並過濾速喜與小吉時辰</div>
         </div>
 
         <svg class="ring-container" viewBox="-230 -230 460 460">
@@ -379,7 +359,7 @@
                     <text class="inner-text" x="75" y="-65">留</text>
                     <text class="inner-text" x="95" y="-30">連</text>
                 </g>
-                <!-- 2: 速喜 (右下) - 偏財吉時 -->
+                <!-- 2: 速喜 (右下) -->
                 <g class="inner-group" onclick="selectInner(2)" id="inner-2">
                     <path class="ring-path" d="M 70 0 L 130 0 A 130 130 0 0 1 65 112.58 L 35 60.62 A 70 70 0 0 0 70 0 Z" />
                     <text class="inner-text" x="95" y="30">速</text>
@@ -390,7 +370,7 @@
                     <path class="ring-path" d="M 35 60.62 L 65 112.58 A 130 130 0 0 1 -65 112.58 L -35 60.62 A 70 70 0 0 0 35 60.62 Z" />
                     <text class="inner-text" x="0" y="100">赤 口</text>
                 </g>
-                <!-- 4: 小吉 (左下) - 偏財吉時 -->
+                <!-- 4: 小吉 (左下) -->
                 <g class="inner-group" onclick="selectInner(4)" id="inner-4">
                     <path class="ring-path" d="M -35 60.62 L -65 112.58 A 130 130 0 0 1 -130 0 L -70 0 A 70 70 0 0 0 -35 60.62 Z" />
                     <text class="inner-text" x="-95" y="30">小</text>
@@ -463,7 +443,6 @@
     <div class="decoder-panel">
         <div class="decoder-title">【 獨立起卦序列 (依序動態起步) 】</div>
         <div class="decoder-inputs" id="decoder-container">
-            <!-- 加上 min="1" 限制最小只能輸入 1 -->
             <input type="number" min="1" placeholder="">
             <input type="number" min="1" placeholder="">
             <input type="number" min="1" placeholder="">
@@ -480,9 +459,9 @@
         const liurenData = [
             { name: "大安", type: "lucky", desc: "身安穩，萬事吉。主平安順遂、謀事穩當，凡事不急躁則有成，大吉大利。 (大吉)" },
             { name: "留連", type: "unlucky", desc: "主未詳，事難成。凡事拖延糾葛、音信緩慢，宜守不宜進，多防暗中阻滯。 (平/凶)" },
-            { name: "速喜", type: "wealth", desc: "【偏財吉時】人便至，喜訊到。主遠方佳音、喜事臨門、百事迅速如意，尤利偏財與投資獲利。 (大吉)" },
+            { name: "速喜", type: "lucky", desc: "人便至，喜訊到。主偏財外快、遠方佳音、喜事臨門、百事迅速如意。 (偏財大吉)" },
             { name: "赤口", type: "unlucky", desc: "主口舌，官司爭。防口角是非、血光驚擾、爭執破財，行事須謹言慎行。 (凶)" },
-            { name: "小吉", type: "wealth", desc: "【偏財吉時】人來喜，謀事通。主貴人相助、謀事和合、出入平安，求財綿長、吉慶可期。 (吉)" },
+            { name: "小吉", type: "lucky", desc: "人來喜，謀事通。主貴人相助、偏財契機、謀事和合、出入平安。 (偏財吉)" },
             { name: "空亡", type: "unlucky", desc: "音信稀，事不順. 主心神不定、空歡喜一場、求謀多落空，宜靜守心態。 (凶)" }
         ];
 
@@ -499,34 +478,24 @@
                 panel.classList.add('panel-lucky');
             } else if (type === 'unlucky') {
                 panel.classList.add('panel-unlucky');
-            } else if (type === 'wealth') {
-                panel.classList.add('panel-wealth');
             }
         }
 
         function clearAllHighlights() {
             for (let i = 0; i < 6; i++) {
-                let el = document.getElementById(`inner-${i}`);
-                el.classList.remove('active');
-                el.classList.remove('wealth-active');
+                document.getElementById(`inner-${i}`).classList.remove('active');
             }
             for (let i = 0; i < 12; i++) {
-                document.getElementById(`outer-${i}`).classList.remove('active');
+                let el = document.getElementById(`outer-${i}`);
+                el.classList.remove('active');
+                el.classList.remove('highlight-target');
             }
         }
 
         function selectInner(index) {
             clearAllHighlights();
-            let el = document.getElementById(`inner-${index}`);
+            document.getElementById(`inner-${index}`).classList.add('active');
             let info = liurenData[index];
-
-            // 若為速喜(2)或小吉(4)，賦予專屬的 wealth-active 樣式
-            if (index === 2 || index === 4) {
-                el.classList.add('wealth-active');
-            } else {
-                el.classList.add('active');
-            }
-
             updateCenterPanel(info.name, info.desc, info.type);
         }
 
@@ -541,25 +510,17 @@
                 let info = liurenData[liurenIndex];
 
                 for (let i = 0; i < 6; i++) {
-                    let el = document.getElementById(`inner-${i}`);
-                    el.classList.remove('active');
-                    el.classList.remove('wealth-active');
+                    document.getElementById(`inner-${i}`).classList.remove('active');
                 }
-                
-                let targetEl = document.getElementById(`inner-${liurenIndex}`);
-                if (liurenIndex === 2 || liurenIndex === 4) {
-                    targetEl.classList.add('wealth-active');
-                } else {
-                    targetEl.classList.add('active');
-                }
+                document.getElementById(`inner-${liurenIndex}`).classList.add('active');
 
                 updateCenterPanel(`${branchNames[index]}：${info.name}`, info.desc, info.type);
             } else {
-                updateCenterPanel(branchNames[index], "請先進行時辰全盤", "");
+                updateCenterPanel(branchNames[index], "請先進行時辰排盤", "");
             }
         }
 
-        // 上方：傳統時辰全盤邏輯
+        // 上方：傳統時辰全盤邏輯（特別強化偏財速喜與小吉時辰區塊呈現）
         function calculateLiuren() {
             let month = parseInt(document.getElementById('lunar-month').value);
             let day = parseInt(document.getElementById('lunar-day').value);
@@ -573,12 +534,31 @@
             let dayLanding = (monthLanding + (day - 1)) % 6;
 
             currentHourlyResults = [];
+            let targetHoursText = [];
+
+            clearAllHighlights();
+
             for (let hour = 1; hour <= 12; hour++) {
                 let finalLanding = (dayLanding + (hour - 1)) % 6;
                 currentHourlyResults.push(finalLanding);
+
+                // 篩選出速喜(2)與小吉(4)的時辰區塊
+                if (finalLanding === 2 || finalLanding === 4) {
+                    let branchIdx = hour - 1;
+                    document.getElementById(`outer-${branchIdx}`).classList.add('highlight-target');
+                    targetHoursText.push(`${branchNames[branchIdx]}(${liurenData[finalLanding].name})`);
+                }
             }
 
+            // 預設選取第一個符合的時辰，或維持預設子時
             selectOuter(0);
+
+            // 在中心面板彙整偏財最佳時辰區塊呈現
+            let summaryDesc = targetHoursText.length > 0 
+                ? `【偏財吉時】${targetHoursText.join('、')}` 
+                : "此組月日排盤暫無速喜與小吉偏財時辰";
+            
+            updateCenterPanel(`農曆 ${month}月 ${day}日 偏財排盤`, summaryDesc, "lucky");
         }
 
         // 下方：正統多數動態連續起卦邏輯（含 0 與負數防呆）
@@ -590,7 +570,6 @@
                 let valStr = inputs[i].value.trim();
                 if (valStr !== "") {
                     let val = parseInt(valStr);
-                    // 嚴格防呆：只要不是整數、或者小於等於 0（包含 0 和負數），就攔截
                     if (isNaN(val) || val <= 0) {
                         alert(`第 ${i + 1} 格輸入有誤：起卦步數必須是大於或等於 1 的正整數！`);
                         inputs[i].focus();
@@ -605,16 +584,14 @@
                 return;
             }
 
-            // 以大安 (0) 為起點
             let currentPosition = 0;
 
             for (let i = 0; i < sequenceValues.length; i++) {
                 let steps = sequenceValues[i];
-                // 從當前宮位起算，往下走 steps 步
                 currentPosition = (currentPosition + steps - 1) % 6;
             }
 
-            currentHourlyResults = []; // 清除時辰全盤狀態
+            currentHourlyResults = []; 
             selectInner(currentPosition);
         }
     </script>
