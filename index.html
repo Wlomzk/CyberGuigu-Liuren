@@ -3,30 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 完美等分雙環法陣</title>
+    <title>CyberGuigu-Liuren | 小六壬十二時辰全解法陣</title>
     <style>
         :root {
             --bg-deep: #070605;
             --ring-bg: #16120e;
             --ring-border: #523e2d;
             --patina-glow: #00ffaa;
+            --danger-glow: #ff5555;
+            --warning-glow: #ffaa00;
             --text-color: #bfa381;
         }
 
         body {
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             background-color: var(--bg-deep);
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-color);
+        }
+
+        /* 上方控制面板 */
+        .control-panel {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: rgba(22, 18, 14, 0.85);
+            border: 1px solid var(--ring-border);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .control-panel label {
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        .control-panel input {
+            width: 55px;
+            background: #070605;
+            border: 1px solid var(--ring-border);
+            color: var(--patina-glow);
+            padding: 5px;
+            text-align: center;
+            font-size: 16px;
+            border-radius: 4px;
+        }
+
+        .control-panel button {
+            background: #221a14;
+            color: var(--patina-glow);
+            border: 1px solid var(--patina-glow);
+            padding: 6px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        .control-panel button:hover {
+            background: var(--patina-glow);
+            color: var(--bg-deep);
+            box-shadow: 0 0 10px var(--patina-glow);
         }
 
         .ring-container {
-            width: 480px;
-            height: 480px;
+            width: 500px;
+            height: 500px;
             filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
         }
 
@@ -53,8 +105,8 @@
         /* 外環十二地支選取狀態 */
         .outer-group.active .ring-path {
             fill: rgba(255, 170, 0, 0.15);
-            stroke: #ffaa00;
-            filter: drop-shadow(0 0 10px #ffaa00);
+            stroke: var(--warning-glow);
+            filter: drop-shadow(0 0 10px var(--warning-glow));
         }
 
         .inner-text {
@@ -84,132 +136,274 @@
         }
 
         .outer-group.active .outer-text {
-            fill: #ffaa00;
-            text-shadow: 0 0 8px #ffaa00;
+            fill: var(--warning-glow);
+            text-shadow: 0 0 8px var(--warning-glow);
+        }
+
+        /* 外側徽章標籤樣式 */
+        .badge-bg {
+            fill: #110e0b;
+            stroke: var(--ring-border);
+            stroke-width: 1;
+            rx: 4;
+            ry: 4;
+            transition: all 0.3s ease;
+        }
+
+        .badge-text {
+            font-size: 10px;
+            font-weight: bold;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+        }
+
+        /* 吉凶色彩類別 */
+        .badge-lucky .badge-bg { stroke: var(--patina-glow); fill: rgba(0,255,170,0.1); }
+        .badge-lucky .badge-text { fill: var(--patina-glow); text-shadow: 0 0 5px var(--patina-glow); }
+
+        .badge-unlucky .badge-bg { stroke: var(--warning-glow); fill: rgba(255,170,0,0.1); }
+        .badge-unlucky .badge-text { fill: var(--warning-glow); text-shadow: 0 0 5px var(--warning-glow); }
+
+        /* 中心空白處文字面板樣式 */
+        .center-panel {
+            background: rgba(10, 8, 7, 0.85);
+            border: 1px solid var(--ring-border);
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: absolute;
+            pointer-events: none;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+
+        .center-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--patina-glow);
+            margin-bottom: 2px;
+            letter-spacing: 1px;
+        }
+
+        .center-desc {
+            font-size: 10px;
+            color: var(--text-color);
+            padding: 0 10px;
+            line-height: 1.2;
         }
     </style>
 </head>
 <body>
 
-    <!-- 視口放大以容納 210 半徑 -->
-    <svg class="ring-container" viewBox="-230 -230 460 460">
+    <!-- 上方月日輸入控制面板 -->
+    <div class="control-panel">
+        <label for="lunar-month">農曆月:</label>
+        <input type="number" id="lunar-month" min="1" max="12" value="1">
         
-        <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130) ================= -->
-        <g id="inner-layer">
-            <!-- 01. 留連 -->
-            <g class="inner-group" onclick="selectInner(0)" id="inner-0">
-                <path class="ring-path" d="M 35 -60.62 L 65 -112.58 A 130 130 0 0 1 130 0 L 70 0 A 70 70 0 0 0 35 -60.62 Z" />
-                <text class="inner-text" x="75" y="-65">留</text>
-                <text class="inner-text" x="95" y="-30">連</text>
+        <label for="lunar-day">農曆日:</label>
+        <input type="number" id="lunar-day" min="1" max="30" value="1">
+        
+        <button onclick="calculateLiuren()">排盤計算</button>
+    </div>
+
+    <!-- 視口容器與中心文字面板包裝 -->
+    <div style="position: relative; display: inline-block;">
+        
+        <!-- 內環中心空白處的資訊面板 -->
+        <div class="center-panel" id="center-info-box" style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
+            <div class="center-title" id="center-title">小六壬</div>
+            <div class="center-desc" id="center-desc">點擊時辰或輸入月日查看詳解</div>
+        </div>
+
+        <svg class="ring-container" viewBox="-230 -230 460 460">
+            
+            <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130) ================= -->
+            <g id="inner-layer">
+                <!-- 01. 留連 -->
+                <g class="inner-group" onclick="selectInner(0)" id="inner-0">
+                    <path class="ring-path" d="M 35 -60.62 L 65 -112.58 A 130 130 0 0 1 130 0 L 70 0 A 70 70 0 0 0 35 -60.62 Z" />
+                    <text class="inner-text" x="75" y="-65">留</text>
+                    <text class="inner-text" x="95" y="-30">連</text>
+                </g>
+
+                <!-- 02. 速喜 -->
+                <g class="inner-group" onclick="selectInner(1)" id="inner-1">
+                    <path class="ring-path" d="M 70 0 L 130 0 A 130 130 0 0 1 65 112.58 L 35 60.62 A 70 70 0 0 0 70 0 Z" />
+                    <text class="inner-text" x="95" y="30">速</text>
+                    <text class="inner-text" x="75" y="65">喜</text>
+                </g>
+
+                <!-- 03. 赤口 -->
+                <g class="inner-group" onclick="selectInner(2)" id="inner-2">
+                    <path class="ring-path" d="M 35 60.62 L 65 112.58 A 130 130 0 0 1 -65 112.58 L -35 60.62 A 70 70 0 0 0 35 60.62 Z" />
+                    <text class="inner-text" x="0" y="100">赤 口</text>
+                </g>
+
+                <!-- 04. 小吉 -->
+                <g class="inner-group" onclick="selectInner(3)" id="inner-3">
+                    <path class="ring-path" d="M -35 60.62 L -65 112.58 A 130 130 0 0 1 -130 0 L -70 0 A 70 70 0 0 0 -35 60.62 Z" />
+                    <text class="inner-text" x="-95" y="30">小</text>
+                    <text class="inner-text" x="-75" y="65">吉</text>
+                </g>
+
+                <!-- 05. 空亡 -->
+                <g class="inner-group" onclick="selectInner(4)" id="inner-4">
+                    <path class="ring-path" d="M -70 0 L -130 0 A 130 130 0 0 1 -65 -112.58 L -35 -60.62 A 70 70 0 0 0 -70 0 Z" />
+                    <text class="inner-text" x="-75" y="-65">空</text>
+                    <text class="inner-text" x="-95" y="-30">亡</text>
+                </g>
+
+                <!-- 06. 大安 -->
+                <g class="inner-group" onclick="selectInner(5)" id="inner-5">
+                    <path class="ring-path" d="M -35 -60.62 L -65 -112.58 A 130 130 0 0 1 65 -112.58 L 35 -60.62 A 70 70 0 0 0 -35 -60.62 Z" />
+                    <text class="inner-text" x="0" y="-100">大 安</text>
+                </g>
             </g>
 
-            <!-- 02. 速喜 -->
-            <g class="inner-group" onclick="selectInner(1)" id="inner-1">
-                <path class="ring-path" d="M 70 0 L 130 0 A 130 130 0 0 1 65 112.58 L 35 60.62 A 70 70 0 0 0 70 0 Z" />
-                <text class="inner-text" x="95" y="30">速</text>
-                <text class="inner-text" x="75" y="65">喜</text>
+
+            <!-- ================= 區塊二：外環十二地支 (半徑 180 ~ 210) ================= -->
+            <g id="outer-layer">
+                <!-- 01. 子 -->
+                <g class="outer-group" onclick="selectOuter(0)" id="outer-0">
+                    <path class="ring-path" d="M -46.56 -173.88 A 180 180 0 0 1 46.56 -173.88 L 54.32 -202.87 A 210 210 0 0 0 -54.32 -202.87 Z" />
+                    <text class="outer-text" x="0" y="-195">子</text>
+                    <g id="badge-0" transform="translate(0, -218)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-0" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 02. 丑 -->
+                <g class="outer-group" onclick="selectOuter(1)" id="outer-1">
+                    <path class="ring-path" d="M 46.56 -173.88 A 180 180 0 0 1 127.28 -127.28 L 148.49 -148.49 A 210 210 0 0 0 54.32 -202.87 Z" />
+                    <text class="outer-text" x="100" y="-170">丑</text>
+                    <g id="badge-1" transform="translate(120, -170)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-1" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 03. 寅 -->
+                <g class="outer-group" onclick="selectOuter(2)" id="outer-2">
+                    <path class="ring-path" d="M 127.28 -127.28 A 180 180 0 0 1 173.88 -46.56 L 202.87 -54.32 A 210 210 0 0 0 148.49 -148.49 Z" />
+                    <text class="outer-text" x="167" y="-100">寅</text>
+                    <g id="badge-2" transform="translate(195, -75)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-2" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 04. 卯 -->
+                <g class="outer-group" onclick="selectOuter(3)" id="outer-3">
+                    <path class="ring-path" d="M 173.88 -46.56 A 180 180 0 0 1 173.88 46.56 L 202.87 54.32 A 210 210 0 0 0 202.87 -54.32 Z" />
+                    <text class="outer-text" x="194" y="0">卯</text>
+                    <g id="badge-3" transform="translate(218, 0)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-3" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 05. 辰 -->
+                <g class="outer-group" onclick="selectOuter(4)" id="outer-4">
+                    <path class="ring-path" d="M 173.88 46.56 A 180 180 0 0 1 127.28 127.28 L 148.49 148.49 A 210 210 0 0 0 202.87 54.32 Z" />
+                    <text class="outer-text" x="167" y="100">辰</text>
+                    <g id="badge-4" transform="translate(195, 75)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-4" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 06. 巳 -->
+                <g class="outer-group" onclick="selectOuter(5)" id="outer-5">
+                    <path class="ring-path" d="M 127.28 127.28 A 180 180 0 0 1 46.56 173.88 L 54.32 202.87 A 210 210 0 0 0 148.49 148.49 Z" />
+                    <text class="outer-text" x="100" y="167">巳</text>
+                    <g id="badge-5" transform="translate(120, 170)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-5" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 07. 午 -->
+                <g class="outer-group" onclick="selectOuter(6)" id="outer-6">
+                    <path class="ring-path" d="M 46.56 173.88 A 180 180 0 0 1 -46.56 173.88 L -54.32 202.87 A 210 210 0 0 0 54.32 202.87 Z" />
+                    <text class="outer-text" x="0" y="195">午</text>
+                    <g id="badge-6" transform="translate(0, 218)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-6" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 08. 未 -->
+                <g class="outer-group" onclick="selectOuter(7)" id="outer-7">
+                    <path class="ring-path" d="M -46.56 173.88 A 180 180 0 0 1 -127.28 127.28 L -148.49 148.49 A 210 210 0 0 0 -54.32 202.87 Z" />
+                    <text class="outer-text" x="-100" y="167">未</text>
+                    <g id="badge-7" transform="translate(-120, 170)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-7" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 09. 申 -->
+                <g class="outer-group" onclick="selectOuter(8)" id="outer-8">
+                    <path class="ring-path" d="M -127.28 127.28 A 180 180 0 0 1 -173.88 46.56 L -202.87 54.32 A 210 210 0 0 0 -148.49 148.49 Z" />
+                    <text class="outer-text" x="-167" y="100">申</text>
+                    <g id="badge-8" transform="translate(-195, 75)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-8" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 10. 酉 -->
+                <g class="outer-group" onclick="selectOuter(9)" id="outer-9">
+                    <path class="ring-path" d="M -173.88 46.56 A 180 180 0 0 1 -173.88 -46.56 L -202.87 -54.32 A 210 210 0 0 0 -202.87 54.32 Z" />
+                    <text class="outer-text" x="-194" y="0">酉</text>
+                    <g id="badge-9" transform="translate(-218, 0)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-9" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 11. 戌 -->
+                <g class="outer-group" onclick="selectOuter(10)" id="outer-10">
+                    <path class="ring-path" d="M -173.88 -46.56 A 180 180 0 0 1 -127.28 -127.28 L -148.49 -148.49 A 210 210 0 0 0 -202.87 -54.32 Z" />
+                    <text class="outer-text" x="-167" y="-100">戌</text>
+                    <g id="badge-10" transform="translate(-195, -75)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-10" x="0" y="0">--</text>
+                    </g>
+                </g>
+                <!-- 12. 亥 -->
+                <g class="outer-group" onclick="selectOuter(11)" id="outer-11">
+                    <path class="ring-path" d="M -127.28 -127.28 A 180 180 0 0 1 -46.56 -173.88 L -54.32 -202.87 A 210 210 0 0 0 -148.49 -148.49 Z" />
+                    <text class="outer-text" x="-100" y="-170">亥</text>
+                    <g id="badge-11" transform="translate(-120, -170)" class="badge-group">
+                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
+                        <text class="badge-text" id="badge-text-11" x="0" y="0">--</text>
+                    </g>
+                </g>
             </g>
 
-            <!-- 03. 赤口 -->
-            <g class="inner-group" onclick="selectInner(2)" id="inner-2">
-                <path class="ring-path" d="M 35 60.62 L 65 112.58 A 130 130 0 0 1 -65 112.58 L -35 60.62 A 70 70 0 0 0 35 60.62 Z" />
-                <text class="inner-text" x="0" y="100">赤 口</text>
-            </g>
-
-            <!-- 04. 小吉 -->
-            <g class="inner-group" onclick="selectInner(3)" id="inner-3">
-                <path class="ring-path" d="M -35 60.62 L -65 112.58 A 130 130 0 0 1 -130 0 L -70 0 A 70 70 0 0 0 -35 60.62 Z" />
-                <text class="inner-text" x="-95" y="30">小</text>
-                <text class="inner-text" x="-75" y="65">吉</text>
-            </g>
-
-            <!-- 05. 空亡 -->
-            <g class="inner-group" onclick="selectInner(4)" id="inner-4">
-                <path class="ring-path" d="M -70 0 L -130 0 A 130 130 0 0 1 -65 -112.58 L -35 -60.62 A 70 70 0 0 0 -70 0 Z" />
-                <text class="inner-text" x="-75" y="-65">空</text>
-                <text class="inner-text" x="-95" y="-30">亡</text>
-            </g>
-
-            <!-- 06. 大安 -->
-            <g class="inner-group" onclick="selectInner(5)" id="inner-5">
-                <path class="ring-path" d="M -35 -60.62 L -65 -112.58 A 130 130 0 0 1 65 -112.58 L 35 -60.62 A 70 70 0 0 0 -35 -60.62 Z" />
-                <text class="inner-text" x="0" y="-100">大 安</text>
-            </g>
-        </g>
-
-
-        <!-- ================= 區塊二：外環十二地支 (半徑 180 ~ 210) ================= -->
-        <g id="outer-layer">
-            <!-- 01. 子 (-15° ~ 15°) -->
-            <g class="outer-group" onclick="selectOuter(0)" id="outer-0">
-                <path class="ring-path" d="M -46.56 -173.88 A 180 180 0 0 1 46.56 -173.88 L 54.32 -202.87 A 210 210 0 0 0 -54.32 -202.87 Z" />
-                <text class="outer-text" x="0" y="-195">子</text>
-            </g>
-            <!-- 02. 丑 (15° ~ 45°) -->
-            <g class="outer-group" onclick="selectOuter(1)" id="outer-1">
-                <path class="ring-path" d="M 46.56 -173.88 A 180 180 0 0 1 127.28 -127.28 L 148.49 -148.49 A 210 210 0 0 0 54.32 -202.87 Z" />
-                <text class="outer-text" x="100" y="-170">丑</text>
-            </g>
-            <!-- 03. 寅 (45° ~ 75°) -->
-            <g class="outer-group" onclick="selectOuter(2)" id="outer-2">
-                <path class="ring-path" d="M 127.28 -127.28 A 180 180 0 0 1 173.88 -46.56 L 202.87 -54.32 A 210 210 0 0 0 148.49 -148.49 Z" />
-                <text class="outer-text" x="167" y="-100">寅</text>
-            </g>
-            <!-- 04. 卯 (75° ~ 105°) -->
-            <g class="outer-group" onclick="selectOuter(3)" id="outer-3">
-                <path class="ring-path" d="M 173.88 -46.56 A 180 180 0 0 1 173.88 46.56 L 202.87 54.32 A 210 210 0 0 0 202.87 -54.32 Z" />
-                <text class="outer-text" x="194" y="0">卯</text>
-            </g>
-            <!-- 05. 辰 (105° ~ 135°) -->
-            <g class="outer-group" onclick="selectOuter(4)" id="outer-4">
-                <path class="ring-path" d="M 173.88 46.56 A 180 180 0 0 1 127.28 127.28 L 148.49 148.49 A 210 210 0 0 0 202.87 54.32 Z" />
-                <text class="outer-text" x="167" y="100">辰</text>
-            </g>
-            <!-- 06. 巳 (135° ~ 165°) -->
-            <g class="outer-group" onclick="selectOuter(5)" id="outer-5">
-                <path class="ring-path" d="M 127.28 127.28 A 180 180 0 0 1 46.56 173.88 L 54.32 202.87 A 210 210 0 0 0 148.49 148.49 Z" />
-                <text class="outer-text" x="100" y="167">巳</text>
-            </g>
-            <!-- 07. 午 (165° ~ 195°) -->
-            <g class="outer-group" onclick="selectOuter(6)" id="outer-6">
-                <path class="ring-path" d="M 46.56 173.88 A 180 180 0 0 1 -46.56 173.88 L -54.32 202.87 A 210 210 0 0 0 54.32 202.87 Z" />
-                <text class="outer-text" x="0" y="195">午</text>
-            </g>
-            <!-- 08. 未 (195° ~ 225°) -->
-            <g class="outer-group" onclick="selectOuter(7)" id="outer-7">
-                <path class="ring-path" d="M -46.56 173.88 A 180 180 0 0 1 -127.28 127.28 L -148.49 148.49 A 210 210 0 0 0 -54.32 202.87 Z" />
-                <text class="outer-text" x="-100" y="167">未</text>
-            </g>
-            <!-- 09. 申 (225° ~ 255°) -->
-            <g class="outer-group" onclick="selectOuter(8)" id="outer-8">
-                <path class="ring-path" d="M -127.28 127.28 A 180 180 0 0 1 -173.88 46.56 L -202.87 54.32 A 210 210 0 0 0 -148.49 148.49 Z" />
-                <text class="outer-text" x="-167" y="100">申</text>
-            </g>
-            <!-- 10. 酉 (255° ~ 285°) -->
-            <g class="outer-group" onclick="selectOuter(9)" id="outer-9">
-                <path class="ring-path" d="M -173.88 46.56 A 180 180 0 0 1 -173.88 -46.56 L -202.87 -54.32 A 210 210 0 0 0 -202.87 54.32 Z" />
-                <text class="outer-text" x="-194" y="0">酉</text>
-            </g>
-            <!-- 11. 戌 (285° ~ 315°) -->
-            <g class="outer-group" onclick="selectOuter(10)" id="outer-10">
-                <path class="ring-path" d="M -173.88 -46.56 A 180 180 0 0 1 -127.28 -127.28 L -148.49 -148.49 A 210 210 0 0 0 -202.87 -54.32 Z" />
-                <text class="outer-text" x="-167" y="-100">戌</text>
-            </g>
-            <!-- 12. 亥 (315° ~ 345°) -->
-            <g class="outer-group" onclick="selectOuter(11)" id="outer-11">
-                <path class="ring-path" d="M -127.28 -127.28 A 180 180 0 0 1 -46.56 -173.88 L -54.32 -202.87 A 210 210 0 0 0 -148.49 -148.49 Z" />
-                <text class="outer-text" x="-100" y="-170">亥</text>
-            </g>
-        </g>
-
-    </svg>
+        </svg>
+    </div>
 
     <script>
+        // 小六壬基本宮位資料與吉凶定義 (對應 index: 0:留連, 1:速喜, 2:赤口, 3:小吉, 4:空亡, 5:大安)
+        const liurenData = [
+            { name: "留連", type: "unlucky", desc: "主未詳，事難成" },
+            { name: "速喜", type: "lucky", desc: "人便至，喜訊到" },
+            { name: "赤口", type: "unlucky", desc: "主口舌，官司爭" },
+            { name: "小吉", type: "lucky", desc: "人來喜，謀事通" },
+            { name: "空亡", type: "unlucky", desc: "音信稀，事不順" },
+            { name: "大安", type: "lucky", desc: "身安穩，萬事吉" }
+        ];
+
+        // 地支名稱陣列 (子=0 到 亥=11)
+        const branchNames = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+
         function selectInner(index) {
             for (let i = 0; i < 6; i++) {
                 document.getElementById(`inner-${i}`).classList.remove('active');
             }
             document.getElementById(`inner-${index}`).classList.add('active');
+            
+            // 更新中心面板
+            document.getElementById('center-title').innerText = liurenData[index].name;
+            document.getElementById('center-desc').innerText = liurenData[index].desc;
         }
 
         function selectOuter(index) {
@@ -217,7 +411,54 @@
                 document.getElementById(`outer-${i}`).classList.remove('active');
             }
             document.getElementById(`outer-${index}`).classList.add('active');
+
+            // 找出該外環對應的高亮內環
+            let badgeText = document.getElementById(`badge-text-${index}`).innerText;
+            let innerIndex = liurenData.findIndex(item => item.name === badgeText);
+            if (innerIndex !== -1) {
+                for (let i = 0; i < 6; i++) {
+                    document.getElementById(`inner-${i}`).classList.remove('active');
+                }
+                document.getElementById(`inner-${innerIndex}`).classList.add('active');
+                
+                document.getElementById('center-title').innerText = `${branchNames[index]}：${liurenData[innerIndex].name}`;
+                document.getElementById('center-desc').innerText = liurenData[innerIndex].desc;
+            }
         }
+
+        // 核心排盤計算邏輯：月起大安 (順數月) -> 月落點起日 (順數日) -> 日落點起子時 (順數時辰)
+        function calculateLiuren() {
+            let month = parseInt(document.getElementById('lunar-month').value) || 1;
+            let day = parseInt(document.getElementById('lunar-day').value) || 1;
+
+            // 1. 以月起大安：大安是索引 5。公式：起點(5) + 月數 - 1
+            let monthLanding = (5 + (month - 1)) % 6;
+
+            // 2. 以月落點起日：公式：月落點 + 日數 - 1
+            let dayLanding = (monthLanding + (day - 1)) % 6;
+
+            // 3. 依 12 個時辰 (子=1 到 亥=12) 分別計算各自的落點
+            for (let hour = 1; hour <= 12; hour++) {
+                // 時辰從日落點開始起算 (子時算1)
+                let finalLanding = (dayLanding + (hour - 1)) % 6;
+                let info = liurenData[finalLanding];
+
+                let badgeGroup = document.getElementById(`badge-${hour - 1}`);
+                let badgeText = document.getElementById(`badge-text-${hour - 1}`);
+
+                // 設定文字與吉凶樣式
+                badgeText.innerText = info.name;
+                badgeGroup.className.baseVal = `badge-group ${info.type === 'lucky' ? 'badge-lucky' : 'badge-unlucky'}`;
+            }
+
+            // 預設選中子時結果
+            selectOuter(0);
+        }
+
+        // 頁面載入時自動執行一次預設排盤
+        window.onload = function() {
+            calculateLiuren();
+        };
     </script>
 </body>
 </html>
