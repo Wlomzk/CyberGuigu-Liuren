@@ -130,6 +130,7 @@
             justify-content: center;
             margin-bottom: 10px;
             width: 100%;
+            flex-wrap: wrap;
         }
 
         .decoder-inputs input {
@@ -332,7 +333,7 @@
         <!-- 內環中心空白處的資訊面板 (動態填滿吉凶色彩) -->
         <div class="center-panel" id="center-info-box">
             <div class="center-title" id="center-title">小六壬</div>
-            <div class="center-desc" id="center-desc">請輸入月日或下方八格進行排盤</div>
+            <div class="center-desc" id="center-desc">請輸入月日或下方靈能序列進行排盤</div>
         </div>
 
         <svg class="ring-container" viewBox="-230 -230 460 460">
@@ -424,20 +425,20 @@
         </svg>
     </div>
 
-    <!-- 下方 8 格賽博解碼序列面板 -->
+    <!-- 下方賽博靈能解碼序列面板 (彈性輸入) -->
     <div class="decoder-panel">
-        <div class="decoder-title">【 八方靈能解碼序列 (1-9) 】</div>
+        <div class="decoder-title">【 靈能解碼序列 (任意填寫 1-9) 】</div>
         <div class="decoder-inputs" id="decoder-container">
-            <input type="number" min="1" max="9" placeholder="1">
-            <input type="number" min="1" max="9" placeholder="2">
-            <input type="number" min="1" max="9" placeholder="3">
-            <input type="number" min="1" max="9" placeholder="4">
-            <input type="number" min="1" max="9" placeholder="5">
-            <input type="number" min="1" max="9" placeholder="6">
-            <input type="number" min="1" max="9" placeholder="7">
-            <input type="number" min="1" max="9" placeholder="8">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
+            <input type="number" min="1" max="9" placeholder="">
         </div>
-        <button class="decoder-btn" onclick="calculateDecoderSequence()">陣列序列推算</button>
+        <button class="decoder-btn" onclick="calculateDecoderSequence()">動態序列推算</button>
     </div>
 
     <script>
@@ -519,26 +520,33 @@
             selectOuter(0);
         }
 
-        // 8格序列推算邏輯：依序累加輸入的數字 (1-9)，對應到 12 時辰的落點分佈
+        // 彈性序列推算邏輯：自動抓取所有有填寫的格子，依序累加推演
         function calculateDecoderSequence() {
             let inputs = document.getElementById('decoder-container').getElementsByTagName('input');
             let sequenceValues = [];
 
             for (let i = 0; i < inputs.length; i++) {
-                let val = parseInt(inputs[i].value);
-                if (isNaN(val) || val < 1 || val > 9) {
-                    alert(`第 ${i + 1} 格請輸入 1 到 9 之間的數字`);
-                    return;
+                let valStr = inputs[i].value.trim();
+                if (valStr !== "") {
+                    let val = parseInt(valStr);
+                    if (isNaN(val) || val < 1 || val > 9) {
+                        alert(`第 ${i + 1} 格輸入有誤，請填入 1 到 9 之間的數字`);
+                        return;
+                    }
+                    sequenceValues.push(val);
                 }
-                sequenceValues.push(val);
+            }
+
+            if (sequenceValues.length === 0) {
+                alert("請至少在任意格子中填入一個數字 (1-9)");
+                return;
             }
 
             currentHourlyResults = [];
             let currentAccumulator = 0;
 
-            // 以 8 個數字作為連續推演因子，對 12 個時辰依序疊加取模 (對應 6 宮小六壬)
+            // 依據實際有填寫的數字序列，對 12 個時辰依序循環加總取模
             for (let hour = 0; hour < 12; hour++) {
-                // 每一個時辰引入對應的序列數字加總推進
                 currentAccumulator += sequenceValues[hour % sequenceValues.length];
                 let finalLanding = currentAccumulator % 6;
                 currentHourlyResults.push(finalLanding);
