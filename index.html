@@ -338,35 +338,41 @@
 
         <svg class="ring-container" viewBox="-230 -230 460 460">
             
-            <!-- ================= 區塊一：內環六宮 ================= -->
+            <!-- ================= 區塊一：內環六宮 (正上方大安起點順時針) ================= -->
             <g id="inner-layer">
+                <!-- 0: 大安 (正上方) -->
                 <g class="inner-group" onclick="selectInner(0)" id="inner-0">
+                    <path class="ring-path" d="M -35 -60.62 L -65 -112.58 A 130 130 0 0 1 65 -112.58 L 35 -60.62 A 70 70 0 0 0 -35 -60.62 Z" />
+                    <text class="inner-text" x="0" y="-100">大 安</text>
+                </g>
+                <!-- 1: 留連 (右上) -->
+                <g class="inner-group" onclick="selectInner(1)" id="inner-1">
                     <path class="ring-path" d="M 35 -60.62 L 65 -112.58 A 130 130 0 0 1 130 0 L 70 0 A 70 70 0 0 0 35 -60.62 Z" />
                     <text class="inner-text" x="75" y="-65">留</text>
                     <text class="inner-text" x="95" y="-30">連</text>
                 </g>
-                <g class="inner-group" onclick="selectInner(1)" id="inner-1">
+                <!-- 2: 速喜 (右下) -->
+                <g class="inner-group" onclick="selectInner(2)" id="inner-2">
                     <path class="ring-path" d="M 70 0 L 130 0 A 130 130 0 0 1 65 112.58 L 35 60.62 A 70 70 0 0 0 70 0 Z" />
                     <text class="inner-text" x="95" y="30">速</text>
                     <text class="inner-text" x="75" y="65">喜</text>
                 </g>
-                <g class="inner-group" onclick="selectInner(2)" id="inner-2">
+                <!-- 3: 赤口 (正下方) -->
+                <g class="inner-group" onclick="selectInner(3)" id="inner-3">
                     <path class="ring-path" d="M 35 60.62 L 65 112.58 A 130 130 0 0 1 -65 112.58 L -35 60.62 A 70 70 0 0 0 35 60.62 Z" />
                     <text class="inner-text" x="0" y="100">赤 口</text>
                 </g>
-                <g class="inner-group" onclick="selectInner(3)" id="inner-3">
+                <!-- 4: 小吉 (左下) -->
+                <g class="inner-group" onclick="selectInner(4)" id="inner-4">
                     <path class="ring-path" d="M -35 60.62 L -65 112.58 A 130 130 0 0 1 -130 0 L -70 0 A 70 70 0 0 0 -35 60.62 Z" />
                     <text class="inner-text" x="-95" y="30">小</text>
                     <text class="inner-text" x="-75" y="65">吉</text>
                 </g>
-                <g class="inner-group" onclick="selectInner(4)" id="inner-4">
+                <!-- 5: 空亡 (左上) -->
+                <g class="inner-group" onclick="selectInner(5)" id="inner-5">
                     <path class="ring-path" d="M -70 0 L -130 0 A 130 130 0 0 1 -65 -112.58 L -35 -60.62 A 70 70 0 0 0 -70 0 Z" />
                     <text class="inner-text" x="-75" y="-65">空</text>
                     <text class="inner-text" x="-95" y="-30">亡</text>
-                </g>
-                <g class="inner-group" onclick="selectInner(5)" id="inner-5">
-                    <path class="ring-path" d="M -35 -60.62 L -65 -112.58 A 130 130 0 0 1 65 -112.58 L 35 -60.62 A 70 70 0 0 0 -35 -60.62 Z" />
-                    <text class="inner-text" x="0" y="-100">大 安</text>
                 </g>
             </g>
 
@@ -425,9 +431,9 @@
         </svg>
     </div>
 
-    <!-- 下方獨立起卦面板 (不分時辰，純數列連算結果) -->
+    <!-- 下方獨立起卦面板 (正統多數動態連續推演) -->
     <div class="decoder-panel">
-        <div class="decoder-title">【 獨立起卦序列 (任意填寫數字) 】</div>
+        <div class="decoder-title">【 獨立起卦序列 (依序動態起步) 】</div>
         <div class="decoder-inputs" id="decoder-container">
             <input type="number" min="1" max="9" placeholder="">
             <input type="number" min="1" max="9" placeholder="">
@@ -451,7 +457,6 @@
             { name: "空亡", type: "unlucky", desc: "音信稀，事不順 (凶)" }
         ];
 
-        // 傳統六宮順序對應索引：0:大安, 1:留連, 2:速喜, 3:赤口, 4:小吉, 5:空亡
         const branchNames = ["子時", "丑時", "寅時", "卯時", "辰時", "巳時", "午時", "未時", "申時", "酉時", "戌時", "亥時"];
         let currentHourlyResults = [];
 
@@ -515,9 +520,7 @@
                 return;
             }
 
-            // 月起大安(0)：月-1步
             let monthLanding = (0 + (month - 1)) % 6;
-            // 月落點起日：日-1步
             let dayLanding = (monthLanding + (day - 1)) % 6;
 
             currentHourlyResults = [];
@@ -529,11 +532,10 @@
             selectOuter(0);
         }
 
-        // 下方：獨立彈性起卦邏輯（不分時辰，純粹累加步數求最終落點）
+        // 下方：正統多數動態連續起卦邏輯（前一個終點接下一個起點）
         function calculateIndependentDivination() {
             let inputs = document.getElementById('decoder-container').getElementsByTagName('input');
-            let totalSteps = 0;
-            let count = 0;
+            let sequenceValues = [];
 
             for (let i = 0; i < inputs.length; i++) {
                 let valStr = inputs[i].value.trim();
@@ -543,23 +545,26 @@
                         alert(`第 ${i + 1} 格輸入有誤`);
                         return;
                     }
-                    totalSteps += val;
-                    count++;
+                    sequenceValues.push(val);
                 }
             }
 
-            if (count === 0) {
+            if (sequenceValues.length === 0) {
                 alert("請至少在任意格子中填入一個數字");
                 return;
             }
 
-            // 正統小六壬起卦：以大安(0)為起點，總步數扣掉 1 後取模 6
-            // 例如總步數 1 落在起點大安 ((0 + 1 - 1) % 6 = 0)
-            let finalLanding = (totalSteps - 1) % 6;
-            if (finalLanding < 0) finalLanding = 0;
+            // 以大安 (0) 為起點
+            let currentPosition = 0;
+
+            for (let i = 0; i < sequenceValues.length; i++) {
+                let steps = sequenceValues[i];
+                // 從當前宮位起算，往下走 steps 步
+                currentPosition = (currentPosition + steps - 1) % 6;
+            }
 
             currentHourlyResults = []; // 清除時辰全盤狀態
-            selectInner(finalLanding);
+            selectInner(currentPosition);
         }
     </script>
 </body>
