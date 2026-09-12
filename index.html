@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CyberGuigu-Liuren | 小六壬十二時辰全解法陣</title>
     <style>
         :root {
@@ -10,17 +10,22 @@
             --ring-bg: #16120e;
             --ring-border: #523e2d;
             --patina-glow: #00ffaa;
+            
             /* 沉穩柔和的吉凶半透明背景色 */
-            --bg-lucky: rgba(30, 77, 58, 0.75);
+            --bg-lucky: rgba(30, 77, 58, 0.85);
             --border-lucky: #44aa77;
             --text-lucky: #88ffcc;
 
-            --bg-unlucky: rgba(92, 38, 38, 0.75);
+            --bg-unlucky: rgba(92, 38, 38, 0.85);
             --border-unlucky: #cc5555;
             --text-unlucky: #ff9999;
 
             --warning-glow: #ffaa00;
             --text-color: #bfa381;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
@@ -31,25 +36,24 @@
             min-height: 100vh;
             background-color: var(--bg-deep);
             margin: 0;
+            padding: 10px;
             overflow-x: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             color: var(--text-color);
         }
 
-        /* 上方控制面板 (支援手機彈性排版) */
+        /* 手機與電腦共用控制面板 */
         .control-panel {
             display: flex;
             gap: 10px;
             align-items: center;
-            background: rgba(22, 18, 14, 0.9);
+            background: rgba(22, 18, 14, 0.95);
             border: 1px solid var(--ring-border);
-            padding: 8px 15px;
+            padding: 10px 18px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 10;
-            flex-wrap: wrap;
-            justify-content: center;
         }
 
         .control-panel label {
@@ -58,14 +62,15 @@
         }
 
         .control-panel input {
-            width: 50px;
+            width: 55px;
             background: #070605;
             border: 1px solid var(--ring-border);
             color: var(--patina-glow);
-            padding: 5px;
+            padding: 6px;
             text-align: center;
             font-size: 16px;
             border-radius: 4px;
+            outline: none;
         }
 
         /* 隱除數字輸入上下箭頭 */
@@ -82,7 +87,7 @@
             background: #221a14;
             color: var(--patina-glow);
             border: 1px solid var(--patina-glow);
-            padding: 6px 14px;
+            padding: 7px 16px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
@@ -90,25 +95,24 @@
             transition: all 0.3s ease;
         }
 
-        .control-panel button:hover {
+        .control-panel button:active {
             background: var(--patina-glow);
             color: var(--bg-deep);
-            box-shadow: 0 0 10px var(--patina-glow);
         }
 
-        /* 手機響應式容器封裝 */
+        /* 手機完美自適應容器 */
         .svg-wrapper {
             position: relative; 
             display: inline-block;
             width: 100%;
-            max-width: 500px;
+            max-width: 450px;
             aspect-ratio: 1 / 1;
         }
 
         .ring-container {
             width: 100%;
             height: 100%;
-            filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
+            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.9));
         }
 
         .ring-path {
@@ -128,14 +132,14 @@
         .inner-group.active .ring-path {
             fill: rgba(0, 255, 170, 0.15);
             stroke: var(--patina-glow);
-            filter: drop-shadow(0 0 10px var(--patina-glow));
+            filter: drop-shadow(0 0 8px var(--patina-glow));
         }
 
         /* 外環十二地支選取狀態 */
         .outer-group.active .ring-path {
             fill: rgba(255, 170, 0, 0.15);
             stroke: var(--warning-glow);
-            filter: drop-shadow(0 0 10px var(--warning-glow));
+            filter: drop-shadow(0 0 8px var(--warning-glow));
         }
 
         .inner-text {
@@ -151,7 +155,7 @@
 
         .inner-group.active .inner-text {
             fill: var(--patina-glow);
-            text-shadow: 0 0 8px var(--patina-glow);
+            text-shadow: 0 0 6px var(--patina-glow);
         }
 
         .outer-text {
@@ -166,12 +170,12 @@
 
         .outer-group.active .outer-text {
             fill: var(--warning-glow);
-            text-shadow: 0 0 8px var(--warning-glow);
+            text-shadow: 0 0 6px var(--warning-glow);
         }
 
         /* 中心圓形解說面板 (預設狀態) */
         .center-panel {
-            background: rgba(10, 8, 7, 0.9);
+            background: rgba(10, 8, 7, 0.95);
             border: 1px solid var(--ring-border);
             border-radius: 50%;
             width: 32%;
@@ -188,20 +192,21 @@
             pointer-events: none;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
             transition: all 0.4s ease;
+            z-index: 5;
         }
 
         .center-title {
-            font-size: clamp(12px, 3.5vw, 16px);
+            font-size: clamp(11px, 3.2vw, 15px);
             font-weight: bold;
             color: var(--patina-glow);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             letter-spacing: 1px;
         }
 
         .center-desc {
-            font-size: clamp(9px, 2.5vw, 11px);
+            font-size: clamp(9px, 2.3vw, 11px);
             color: var(--text-color);
-            padding: 0 10px;
+            padding: 0 8px;
             line-height: 1.3;
         }
 
@@ -209,7 +214,7 @@
         .center-panel.panel-lucky {
             background: var(--bg-lucky);
             border-color: var(--border-lucky);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 12px rgba(68, 170, 119, 0.4);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 0 12px rgba(68, 170, 119, 0.4);
         }
         .center-panel.panel-lucky .center-title { color: var(--text-lucky); }
         .center-panel.panel-lucky .center-desc { color: #e6fff2; }
@@ -217,19 +222,21 @@
         .center-panel.panel-unlucky {
             background: var(--bg-unlucky);
             border-color: var(--border-unlucky);
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 12px rgba(204, 85, 85, 0.4);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.4), 0 0 12px rgba(204, 85, 85, 0.4);
         }
         .center-panel.panel-unlucky .center-title { color: var(--text-unlucky); }
         .center-panel.panel-unlucky .center-desc { color: #ffe6e6; }
 
-        /* 手機螢幕優化適應 */
-        @media (max-width: 520px) {
-            body {
-                padding: 10px;
-            }
+        /* 手機直向螢幕微調支援 */
+        @media (max-width: 480px) {
             .control-panel {
-                width: 90%;
-                padding: 8px;
+                width: 100%;
+                justify-content: center;
+                padding: 8px 10px;
+                margin-bottom: 10px;
+            }
+            .control-panel input {
+                width: 50px;
             }
         }
     </style>
@@ -258,7 +265,7 @@
 
         <svg class="ring-container" viewBox="-230 -230 460 460">
             
-            <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130) ================= -->
+            <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130，完美修正內緣) ================= -->
             <g id="inner-layer">
                 <!-- 01. 留連 -->
                 <g class="inner-group" onclick="selectInner(0)" id="inner-0">
@@ -380,8 +387,6 @@
         ];
 
         const branchNames = ["子時", "丑時", "寅時", "卯時", "辰時", "巳時", "午時", "未時", "申時", "酉時", "戌時", "亥時"];
-        
-        // 儲存每次計算後 12 個時辰對應的結果索引
         let currentHourlyResults = [];
 
         function updateCenterPanel(title, desc, type) {
@@ -389,7 +394,6 @@
             document.getElementById('center-title').innerText = title;
             document.getElementById('center-desc').innerText = desc;
 
-            // 切換中心面板的吉凶填滿色系
             panel.className = "center-panel";
             if (type === 'lucky') {
                 panel.classList.add('panel-lucky');
@@ -414,12 +418,10 @@
             }
             document.getElementById(`outer-${index}`).classList.add('active');
 
-            // 如果已經排盤過，點擊外環地支時，聯動顯示該時辰對應的宮位結果與吉凶色彩
             if (currentHourlyResults.length > 0) {
                 let liurenIndex = currentHourlyResults[index];
                 let info = liurenData[liurenIndex];
 
-                // 同步高亮內環對應宮位
                 for (let i = 0; i < 6; i++) {
                     document.getElementById(`inner-${i}`).classList.remove('active');
                 }
@@ -440,20 +442,16 @@
                 return;
             }
 
-            // 1. 以月起大安 (索引 5)
             let monthLanding = (5 + (month - 1)) % 6;
-            // 2. 以月落點起日
             let dayLanding = (monthLanding + (day - 1)) % 6;
 
             currentHourlyResults = [];
 
-            // 3. 計算 12 時辰落點
             for (let hour = 1; hour <= 12; hour++) {
                 let finalLanding = (dayLanding + (hour - 1)) % 6;
                 currentHourlyResults.push(finalLanding);
             }
 
-            // 排盤完成後，預設選中子時 (index 0)
             selectOuter(0);
         }
     </script>
