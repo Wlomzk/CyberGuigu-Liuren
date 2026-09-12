@@ -431,18 +431,19 @@
         </svg>
     </div>
 
-    <!-- 下方獨立起卦面板 (正統多數動態連續推演) -->
+    <!-- 下方獨立起卦面板 (正統多數動態連續推演 + 防呆) -->
     <div class="decoder-panel">
         <div class="decoder-title">【 獨立起卦序列 (依序動態起步) 】</div>
         <div class="decoder-inputs" id="decoder-container">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
-            <input type="number" min="1" max="9" placeholder="">
+            <!-- 加上 min="1" 限制最小只能輸入 1 -->
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
+            <input type="number" min="1" placeholder="">
         </div>
         <button class="decoder-btn" onclick="calculateIndependentDivination()">起卦推算結果</button>
     </div>
@@ -532,7 +533,7 @@
             selectOuter(0);
         }
 
-        // 下方：正統多數動態連續起卦邏輯（前一個終點接下一個起點）
+        // 下方：正統多數動態連續起卦邏輯（含 0 與負數防呆）
         function calculateIndependentDivination() {
             let inputs = document.getElementById('decoder-container').getElementsByTagName('input');
             let sequenceValues = [];
@@ -541,8 +542,10 @@
                 let valStr = inputs[i].value.trim();
                 if (valStr !== "") {
                     let val = parseInt(valStr);
-                    if (isNaN(val)) {
-                        alert(`第 ${i + 1} 格輸入有誤`);
+                    // 嚴格防呆：只要不是整數、或者小於等於 0（包含 0 和負數），就攔截
+                    if (isNaN(val) || val <= 0) {
+                        alert(`第 ${i + 1} 格輸入有誤：起卦步數必須是大於或等於 1 的正整數！`);
+                        inputs[i].focus();
                         return;
                     }
                     sequenceValues.push(val);
@@ -566,6 +569,6 @@
             currentHourlyResults = []; // 清除時辰全盤狀態
             selectInner(currentPosition);
         }
-    </script> 
+    </script>
 </body>
 </html>
