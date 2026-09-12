@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 青銅法陣核心</title>
+    <title>CyberGuigu-Liuren | 核心環狀介面</title>
     <style>
         :root {
             --bg-deep: #070605;
@@ -21,153 +21,84 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
-        /* 法陣容器 */
+        /* 
+          【尺寸與寬度調整區】
+          修改下面 .ring-wrapper 的 width 和 height 即可改變整體法陣大小
+        */
         .ring-wrapper {
             position: relative;
-            width: 340px;
-            height: 340px;
+            width: 320px; /* 這裡可自行調整整體寬度 */
+            height: 320px; /* 這裡可自行調整整體高度 */
+            border-radius: 50%;
+            border: 2px dashed rgba(138, 111, 85, 0.4); /* 空心環形外框 */
+        }
+
+        /* 圍繞中心平均分配的六個區塊 */
+        .palace {
+            position: absolute;
+            /* 讓區塊初始定位在圓心，再透過 transform 旋轉並推到半徑外側 */
+            top: calc(50% - 22px); 
+            left: calc(50% - 40px);
+            width: 80px;
+            height: 44px;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        /* 青銅主體圓環 */
-        .liuren-ring {
-            position: relative;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            /* 模擬青銅鑄造的金屬質感與塊狀分界 */
-            background: 
-                conic-gradient(
-                    from 0deg,
-                    rgba(61, 49, 37, 0.95) 0deg, rgba(40, 31, 23, 0.95) 60deg,
-                    rgba(54, 43, 32, 0.95) 60deg, rgba(35, 27, 20, 0.95) 120deg,
-                    rgba(61, 49, 37, 0.95) 120deg, rgba(40, 31, 23, 0.95) 180deg,
-                    rgba(54, 43, 32, 0.95) 180deg, rgba(35, 27, 20, 0.95) 240deg,
-                    rgba(61, 49, 37, 0.95) 240deg, rgba(40, 31, 23, 0.95) 300deg,
-                    rgba(54, 43, 32, 0.95) 300deg, rgba(35, 27, 20, 0.95) 360deg
-                ),
-                radial-gradient(circle, #4a3c2c 0%, #1f1812 70%, #0d0a08 100%);
-            /* 多層立體邊框與重手感陰影 */
-            border: 5px solid #6b533c;
-            box-shadow: 
-                0 0 50px rgba(0, 0, 0, 0.9),
-                inset 0 0 30px rgba(0, 0, 0, 0.95),
-                0 0 0 2px #261d15,
-                0 0 0 8px #403022;
-        }
-
-        /* 內側陰影環，增添深邃感 */
-        .liuren-ring::after {
-            content: '';
-            position: absolute;
-            inset: 15px;
-            border-radius: 50%;
-            border: 1px dashed rgba(138, 111, 85, 0.3);
-            pointer-events: none;
-        }
-
-        /* 六等份宮位 */
-        .palace {
-            position: absolute;
-            width: 50%;
-            height: 50%;
-            transform-origin: bottom right;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 25px;
-            box-sizing: border-box;
-            color: #9c8b73;
-            font-weight: 700;
-            font-size: 15px;
-            letter-spacing: 2px;
-            border-right: 1px solid rgba(107, 83, 60, 0.25);
-            border-bottom: 1px solid rgba(107, 83, 60, 0.25);
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .p1 { transform: rotate(0deg) skewY(-30deg); }   /* 大安 */
-        .p2 { transform: rotate(60deg) skewY(-30deg); }  /* 留連 */
-        .p3 { transform: rotate(120deg) skewY(-30deg); } /* 速喜 */
-        .p4 { transform: rotate(180deg) skewY(-30deg); } /* 赤口 */
-        .p5 { transform: rotate(240deg) skewY(-30deg); } /* 小吉 */
-        .p6 { transform: rotate(300deg) skewY(-30deg); } /* 空亡 */
-
-        /* 修正文字變形並加上金屬浮雕陰影 */
-        .palace span {
-            transform: skewY(30deg);
-            display: block;
-            position: absolute;
-            top: 20px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-        }
-
-        /* 靈能流光啟動狀態 */
-        .palace.active {
-            color: var(--patina-glow);
-            text-shadow: 0 0 12px var(--patina-glow), 0 2px 4px rgba(0, 0, 0, 0.9);
-            border-color: rgba(0, 255, 170, 0.4);
-            background: radial-gradient(circle at center, rgba(0, 255, 170, 0.12) 0%, transparent 70%);
-        }
-
-        /* 測試按鈕列 (暫時置於下方供互動預覽) */
-        .controls {
-            position: fixed;
-            bottom: 30px;
-            display: flex;
-            gap: 8px;
-        }
-
-        button {
-            background: #1a1510;
+            background: rgba(26, 21, 16, 0.85);
+            border: 1px solid #6b533c;
+            border-radius: 6px;
             color: #bfa381;
-            border: 1px solid #574433;
-            padding: 8px 14px;
-            border-radius: 4px;
-            font-size: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+            transition: all 0.3s ease;
         }
 
-        button:hover {
+        /* 
+          利用數學極座標原理：
+          1. rotate(角度) 決定方塊在圓周上的方向
+          2. translate(距離) 決定距離中心的半徑範圍 (此處設 105px 讓其完美環繞)
+          3. 再次反向 rotate(-角度) 確保文字永遠保持水平、不旋轉、不變形
+        */
+        .p0 { transform: rotate(-90deg) translate(105px) rotate(90deg); }   /* 大安 (頂部) */
+        .p1 { transform: rotate(-30deg) translate(105px) rotate(30deg); }   /* 留連 */
+        .p2 { transform: rotate(30deg) translate(105px) rotate(-30deg); }   /* 速喜 */
+        .p3 { transform: rotate(90deg) translate(105px) rotate(-90deg); }   /* 赤口 (底部) */
+        .p4 { transform: rotate(150deg) translate(105px) rotate(-150deg); } /* 小吉 */
+        .p5 { transform: rotate(210deg) translate(105px) rotate(-210deg); } /* 空亡 */
+
+        /* 區塊互動與點亮狀態 */
+        .palace:hover {
             border-color: var(--patina-glow);
             color: var(--patina-glow);
-            box-shadow: 0 0 8px rgba(0, 255, 170, 0.2);
+        }
+
+        .palace.active {
+            background: rgba(0, 255, 170, 0.15);
+            border-color: var(--patina-glow);
+            color: var(--patina-glow);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.3);
         }
     </style>
 </head>
 <body>
 
-    <div class="ring-wrapper">
-        <div class="liuren-ring" id="mainRing">
-            <div class="palace p1" id="palace-0" onclick="selectPalace(0)"><span>大安</span></div>
-            <div class="palace p2" id="palace-1" onclick="selectPalace(1)"><span>留連</span></div>
-            <div class="palace p3" id="palace-2" onclick="selectPalace(2)"><span>速喜</span></div>
-            <div class="palace p4" id="palace-3" onclick="selectPalace(3)"><span>赤口</span></div>
-            <div class="palace p5" id="palace-4" onclick="selectPalace(4)"><span>小吉</span></div>
-            <div class="palace p6" id="palace-5" onclick="selectPalace(5)"><span>空亡</span></div>
-        </div>
-    </div>
-
-    <div class="controls">
-        <button onclick="selectPalace(0)">大安</button>
-        <button onclick="selectPalace(1)">留連</button>
-        <button onclick="selectPalace(2)">速喜</button>
-        <button onclick="selectPalace(3)">赤口</button>
-        <button onclick="selectPalace(4)">小吉</button>
-        <button onclick="selectPalace(5)">空亡</button>
+    <div class="ring-wrapper" id="mainRing">
+        <div class="palace p0" id="palace-0" onclick="selectPalace(0)">大安</div>
+        <div class="palace p1" id="palace-1" onclick="selectPalace(1)">留連</div>
+        <div class="palace p2" id="palace-2" onclick="selectPalace(2)">速喜</div>
+        <div class="palace p3" id="palace-3" onclick="selectPalace(3)">赤口</div>
+        <div class="palace p4" id="palace-4" onclick="selectPalace(4)">小吉</div>
+        <div class="palace p5" id="palace-5" onclick="selectPalace(5)">空亡</div>
     </div>
 
     <script>
         function selectPalace(index) {
-            // 清除全部高亮
             for (let i = 0; i < 6; i++) {
                 document.getElementById(`palace-${i}`).classList.remove('active');
             }
-            // 點亮指定宮位
             document.getElementById(`palace-${index}`).classList.add('active');
         }
     </script>
