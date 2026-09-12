@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 圓環法陣核心</title>
+    <title>CyberGuigu-Liuren | 完美閉環法陣</title>
     <style>
         :root {
             --bg-deep: #070605;
@@ -26,36 +26,36 @@
 
         /* 
           【尺寸與寬度調整區】
-          修改下面 svg 元素的 width 和 height 即可調整整體法陣大小
+          修改這裡的 width 和 height 即可自由放大縮小整體法陣
         */
         .ring-container {
-            width: 320px;  /* 整體寬度 */
-            height: 320px; /* 整體高度 */
-            filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.8));
+            width: 340px;
+            height: 340px;
+            filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
         }
 
-        /* 圓環扇形區塊基礎樣式 */
+        /* 扇形區塊基本樣式 */
         .palace-path {
             fill: var(--ring-bg);
             stroke: var(--ring-border);
-            stroke-width: 1.5;
+            stroke-width: 2;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        /* 懸停與點亮效果 */
         .palace-path:hover {
             fill: #221a14;
             stroke: var(--patina-glow);
         }
 
-        .palace-path.active {
-            fill: rgba(0, 255, 170, 0.12);
+        /* 啟動高亮狀態 */
+        .palace-group.active .palace-path {
+            fill: rgba(0, 255, 170, 0.15);
             stroke: var(--patina-glow);
-            filter: drop-shadow(0 0 8px var(--patina-glow));
+            filter: drop-shadow(0 0 10px var(--patina-glow));
         }
 
-        /* 區塊內的文字樣式 (保持水平、不旋轉) */
+        /* 文字樣式 (保持水平、不旋轉) */
         .palace-text {
             fill: var(--text-color);
             font-size: 15px;
@@ -63,7 +63,7 @@
             letter-spacing: 2px;
             text-anchor: middle;
             dominant-baseline: central;
-            pointer-events: none; /* 讓點擊事件直接穿透到背後的 path */
+            pointer-events: none;
             transition: fill 0.3s ease;
         }
 
@@ -75,47 +75,50 @@
 </head>
 <body>
 
+    <!-- 
+      使用 viewBox="0 0 300 300"
+      中心點為 (150, 150)
+      外徑 R = 130, 內徑 r = 70
+    -->
     <svg class="ring-container" viewBox="0 0 300 300">
-        <!-- 
-          中心點固定在 (150, 150)
-          外徑 R = 130, 內徑 r = 70 (中間空心半徑 70)
-        -->
         
-        <!-- 01. 大安 (上方) -->
+        <!-- 01. 大安 (300度 ~ 60度) -->
         <g class="palace-group" onclick="selectPalace(0)" id="group-0">
-            <path class="palace-path" d="M 115 89.38 L 85 37.42 A 130 130 0 0 1 215 37.42 L 185 89.38 A 70 70 0 0 0 115 89.38 Z" />
-            <text class="palace-text" x="150" y="52">大安</text>
+            <path class="palace-path" d="M 150 150 L 150 20 A 130 130 0 0 1 262.58 215 L 192.74 174.64 A 70 70 0 0 0 150 90 Z" />
+            <text class="palace-text" x="150" y="55">大安</text>
         </g>
 
-        <!-- 02. 留連 (右上方) -->
+        <!-- 02. 留連 (60度 ~ 120度) -->
         <g class="palace-group" onclick="selectPalace(1)" id="group-1">
-            <path class="palace-path" d="M 185 89.38 L 215 37.42 A 130 130 0 0 1 262.58 135 L 210.62 135 A 70 70 0 0 0 185 89.38 Z" />
-            <text class="palace-text" x="228" y="100">留連</text>
+            <path class="palace-path" d="M 150 150 L 262.58 215 A 130 130 0 0 1 150 280 L 150 210 A 70 70 0 0 0 192.74 174.64 Z" />
+            <text class="palace-text" x="230" y="150">留連</text>
         </g>
 
-        <!-- 03. 速喜 (右下方) -->
+        <!-- 03. 速喜 (120度 ~ 180度) -->
         <g class="palace-group" onclick="selectPalace(2)" id="group-2">
-            <path class="palace-path" d="M 210.62 165 L 262.58 165 A 130 130 0 0 1 215 262.58 L 185 210.62 A 70 70 0 0 0 210.62 165 Z" />
-            <text class="palace-text" x="228" y="200">速喜</text>
+            <path class="palace-path" d="M 150 150 L 150 280 A 130 130 0 0 1 37.42 215 L 107.26 174.64 A 70 70 0 0 0 150 210 Z" />
+            <text class="palace-text" x="230" y="210">速喜</text>
         </g>
 
-        <!-- 04. 赤口 (下方) -->
+        <!-- 04. 赤口 (180度 ~ 240度) -->
         <g class="palace-group" onclick="selectPalace(3)" id="group-3">
-            <path class="palace-path" d="M 185 210.62 L 215 262.58 A 130 130 0 0 1 85 262.58 L 115 210.62 A 70 70 0 0 0 185 210.62 Z" />
-            <text class="palace-text" x="150" y="248">赤口</text>
+            <path class="palace-path" d="M 150 150 L 37.42 215 A 130 130 0 0 1 37.42 85 L 107.26 125.36 A 70 70 0 0 0 107.26 174.64 Z" />
+            <text class="palace-text" x="150" y="245">赤口</text>
         </g>
 
-        <!-- 05. 小吉 (左下方) -->
+        <!-- 05. 小吉 (240度 ~ 300度) -->
         <g class="palace-group" onclick="selectPalace(4)" id="group-4">
-            <path class="palace-path" d="M 115 210.62 L 85 262.58 A 130 130 0 0 1 37.42 165 L 89.38 165 A 70 70 0 0 0 115 210.62 Z" />
-            <text class="palace-text" x="72" y="200">小吉</text>
+            <path class="palace-path" d="M 150 150 L 37.42 85 A 130 130 0 0 1 150 20 L 150 90 A 70 70 0 0 0 107.26 125.36 Z" />
+            <text class="palace-text" x="70" y="210">小吉</text>
         </g>
 
-        <!-- 06. 空亡 (左上方) -->
+        <!-- 06. 空亡 (300度 ~ 360度) -->
         <g class="palace-group" onclick="selectPalace(5)" id="group-5">
-            <path class="palace-path" d="M 89.38 135 L 37.42 135 A 130 130 0 0 1 85 37.42 L 115 89.38 A 70 70 0 0 0 89.38 135 Z" />
-            <text class="palace-text" x="72" y="100">空亡</text>
-        </svg>
+            <path class="palace-path" d="M 150 150 L 150 20 A 130 130 0 0 1 262.58 85 L 192.74 125.36 A 70 70 0 0 0 150 90 Z" />
+            <text class="palace-text" x="70" y="150">空亡</text>
+        </g>
+
+    </svg>
 
     <script>
         function selectPalace(index) {
