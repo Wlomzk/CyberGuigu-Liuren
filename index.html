@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberGuigu-Liuren | 雙環法陣</title>
+    <title>CyberGuigu-Liuren | 雙環分離法陣</title>
     <style>
         :root {
             --bg-deep: #070605;
@@ -25,12 +25,13 @@
         }
 
         .ring-container {
-            width: 380px;
-            height: 380px;
+            width: 400px;
+            height: 400px;
             filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
         }
 
-        .palace-path {
+        /* 共通環狀區塊基本樣式 */
+        .ring-path {
             fill: var(--ring-bg);
             stroke: var(--ring-border);
             stroke-width: 1.5;
@@ -38,21 +39,29 @@
             transition: all 0.3s ease;
         }
 
-        .palace-path:hover {
+        .ring-path:hover {
             fill: #221a14;
             stroke: var(--patina-glow);
         }
 
-        .palace-group.active .palace-path {
+        /* 內環選取狀態樣式 */
+        .inner-group.active .ring-path {
             fill: rgba(0, 255, 170, 0.15);
             stroke: var(--patina-glow);
             filter: drop-shadow(0 0 10px var(--patina-glow));
         }
 
-        /* 內環文字樣式（完全保留你的原始座標與結構） */
-        .palace-text {
+        /* 外環選取狀態樣式（獨立類別，方便未來分別上色） */
+        .outer-group.active .ring-path {
+            fill: rgba(255, 170, 0, 0.15);
+            stroke: #ffaa00;
+            filter: drop-shadow(0 0 10px #ffaa00);
+        }
+
+        /* 內環文字（完全保留你的原始座標） */
+        .inner-text {
             fill: var(--text-color);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             letter-spacing: 2px;
             text-anchor: middle;
@@ -61,134 +70,155 @@
             transition: fill 0.3s ease;
         }
 
-        .palace-group.active .palace-text {
+        .inner-group.active .inner-text {
             fill: var(--patina-glow);
             text-shadow: 0 0 8px var(--patina-glow);
         }
 
-        /* 外環十二地支文字樣式 */
+        /* 外環十二地支文字 */
         .outer-text {
             fill: var(--text-color);
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             text-anchor: middle;
             dominant-baseline: central;
             pointer-events: none;
+            transition: fill 0.3s ease;
+        }
+
+        .outer-group.active .outer-text {
+            fill: #ffaa00;
+            text-shadow: 0 0 8px #ffaa00;
         }
     </style>
 </head>
 <body>
 
-    <svg class="ring-container" viewBox="0 0 300 300">
-        <!-- ================= 內環六宮 (完全保留你的原始程式碼) ================= -->
+    <svg class="ring-container" viewBox="-180 -180 360 360">
         
-        <!-- 01. 大安 (-120° ~ -60° | 頂部水平排列) -->
-        <g class="palace-group" onclick="selectPalace(0)" id="group-0">
-            <path class="palace-path" d="M 115 89.38 L 85 37.42 A 130 130 0 0 1 215 37.42 L 185 89.38 A 70 70 0 0 0 115 89.38 Z" />
-            <text class="palace-text" x="150" y="53">大 安</text>
+        <!-- ================= 區塊一：內環六宮 (半徑 70 ~ 130) ================= -->
+        <g id="inner-layer" transform="translate(0, 0)">
+            <!-- 01. 大安 -->
+            <g class="inner-group" onclick="selectInner(0)" id="inner-0">
+                <path class="ring-path" d="M -35 -40.62 L -65 -92.58 A 130 130 0 0 1 65 -92.58 L 35 -40.62 A 70 70 0 0 0 -35 -40.62 Z" />
+                <text class="inner-text" x="0" y="-77">大 安</text>
+            </g>
+
+            <!-- 02. 留連 -->
+            <g class="inner-group" onclick="selectInner(1)" id="inner-1">
+                <path class="ring-path" d="M 35 -40.62 L 65 -92.58 A 130 130 0 0 1 130 0 L 70 0 A 70 70 0 0 0 35 -40.62 Z" />
+                <text class="inner-text" x="85" y="-45">
+                    <tspan x="80" dy="-12">留</tspan>
+                    <tspan x="95" dy="33">連</tspan>
+                </text>
+            </g>
+
+            <!-- 03. 速喜 -->
+            <g class="inner-group" onclick="selectInner(2)" id="inner-2">
+                <path class="ring-path" d="M 70 0 L 130 0 A 130 130 0 0 1 65 112.58 L 35 60.62 A 70 70 0 0 0 70 0 Z" />
+                <text class="inner-text" x="85" y="45">
+                    <tspan x="95" dy="-12">速</tspan>
+                    <tspan x="75" dy="33">喜</tspan>
+                </text>
+            </g>
+
+            <!-- 04. 赤口 -->
+            <g class="inner-group" onclick="selectInner(3)" id="inner-3">
+                <path class="ring-path" d="M 35 60.62 L 65 112.58 A 130 130 0 0 1 -65 112.58 L -35 60.62 A 70 70 0 0 0 35 60.62 Z" />
+                <text class="inner-text" x="0" y="100">赤 口</text>
+            </g>
+
+            <!-- 05. 小吉 -->
+            <g class="inner-group" onclick="selectInner(4)" id="inner-4">
+                <path class="ring-path" d="M -35 60.62 L -65 112.58 A 130 130 0 0 1 -130 0 L -70 0 A 70 70 0 0 0 -35 60.62 Z" />
+                <text class="inner-text" x="-85" y="45">
+                    <tspan x="-90" dy="-12">小</tspan>
+                    <tspan x="-80" dy="33">吉</tspan>
+                </text>
+            </g>
+
+            <!-- 06. 空亡 -->
+            <g class="inner-group" onclick="selectInner(5)" id="inner-5">
+                <path class="ring-path" d="M -70 0 L -130 0 A 130 130 0 0 1 -65 -92.58 L -35 -40.62 A 70 70 0 0 0 -70 0 Z" />
+                <text class="inner-text" x="-85" y="-45">
+                    <tspan x="-75" dy="-15">空</tspan>
+                    <tspan x="-90" dy="30">亡</tspan>
+                </text>
+            </g>
         </g>
 
-        <!-- 02. 留連 (-60° ~ 0° | 右上側直向排列) -->
-        <g class="palace-group" onclick="selectPalace(1)" id="group-1">
-            <path class="palace-path" d="M 185 89.38 L 215 37.42 A 130 130 0 0 1 280 150 L 220 150 A 70 70 0 0 0 185 89.38 Z" />
-            <text class="palace-text" x="235" y="105">
-                <tspan x="230" dy="-15">留</tspan>
-                <tspan x="245" dy="30">連</tspan>
-            </text>
+
+        <!-- ================= 區塊二：外環十二地支 (半徑 130 ~ 160) ================= -->
+        <g id="outer-layer" transform="translate(0, 0)">
+            <!-- 12地支依 30 度等分環繞，內徑 130，外徑 160 -->
+            <!-- 範例設置子、丑、寅...等 12 個區塊 -->
+            <g class="outer-group" onclick="selectOuter(0)" id="outer-0">
+                <path class="ring-path" d="M -41.57 -122.07 L -51.2 -150.2 A 160 160 0 0 1 51.2 -150.2 L 41.57 -122.07 A 130 130 0 0 0 -41.57 -122.07 Z" />
+                <text class="outer-text" x="0" y="-138">子</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(1)" id="outer-1">
+                <path class="ring-path" d="M 41.57 -122.07 L 51.2 -150.2 A 160 160 0 0 1 122.07 -102.68 L 99.28 -83.47 A 130 130 0 0 0 41.57 -122.07 Z" />
+                <text class="outer-text" x="78" y="-120">丑</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(2)" id="outer-2">
+                <path class="ring-path" d="M 99.28 -83.47 L 122.07 -102.68 A 160 160 0 0 1 150.2 -51.2 L 122.07 -41.57 A 130 130 0 0 0 99.28 -83.47 Z" />
+                <text class="outer-text" x="123" y="-78">寅</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(3)" id="outer-3">
+                <path class="ring-path" d="M 122.07 -41.57 L 150.2 -51.2 A 160 160 0 0 1 150.2 51.2 L 122.07 41.57 A 130 130 0 0 0 122.07 -41.57 Z" />
+                <text class="outer-text" x="138" y="0">卯</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(4)" id="outer-4">
+                <path class="ring-path" d="M 122.07 41.57 L 150.2 51.2 A 160 160 0 0 1 122.07 102.68 L 99.28 83.47 A 130 130 0 0 0 122.07 41.57 Z" />
+                <text class="outer-text" x="123" y="78">辰</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(5)" id="outer-5">
+                <path class="ring-path" d="M 99.28 83.47 L 122.07 102.68 A 160 160 0 0 1 51.2 150.2 L 41.57 122.07 A 130 130 0 0 0 99.28 83.47 Z" />
+                <text class="outer-text" x="78" y="120">巳</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(6)" id="outer-6">
+                <path class="ring-path" d="M 41.57 122.07 L 51.2 150.2 A 160 160 0 0 1 -51.2 150.2 L -41.57 122.07 A 130 130 0 0 0 41.57 122.07 Z" />
+                <text class="outer-text" x="0" y="138">午</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(7)" id="outer-7">
+                <path class="ring-path" d="M -41.57 122.07 L -51.2 150.2 A 160 160 0 0 1 -122.07 102.68 L -99.28 83.47 A 130 130 0 0 0 -41.57 122.07 Z" />
+                <text class="outer-text" x="-78" y="120">未</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(8)" id="outer-8">
+                <path class="ring-path" d="M -99.28 83.47 L -122.07 102.68 A 160 160 0 0 1 -150.2 51.2 L -122.07 41.57 A 130 130 0 0 0 -99.28 83.47 Z" />
+                <text class="outer-text" x="-123" y="78">申</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(9)" id="outer-9">
+                <path class="ring-path" d="M -122.07 41.57 L -150.2 51.2 A 160 160 0 0 1 -150.2 -51.2 L -122.07 -41.57 A 130 130 0 0 0 -122.07 41.57 Z" />
+                <text class="outer-text" x="-138" y="0">酉</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(10)" id="outer-10">
+                <path class="ring-path" d="M -122.07 -41.57 L -150.2 -51.2 A 160 160 0 0 1 -122.07 -102.68 L -99.28 -83.47 A 130 130 0 0 0 -122.07 -41.57 Z" />
+                <text class="outer-text" x="-123" y="-78">戌</text>
+            </g>
+            <g class="outer-group" onclick="selectOuter(11)" id="outer-11">
+                <path class="ring-path" d="M -99.28 -83.47 L -122.07 -102.68 A 160 160 0 0 1 -51.2 -150.2 L -41.57 -122.07 A 130 130 0 0 0 -99.28 -83.47 Z" />
+                <text class="outer-text" x="-78" y="-120">亥</text>
+            </g>
         </g>
-
-        <!-- 03. 速喜 (0° ~ 60° | 右下側直向排列) -->
-        <g class="palace-group" onclick="selectPalace(2)" id="group-2">
-            <path class="palace-path" d="M 220 150 L 280 150 A 130 130 0 0 1 215 262.58 L 185 210.62 A 70 70 0 0 0 220 150 Z" />
-            <text class="palace-text" x="235" y="195">
-                <tspan x="245" dy="-12">速</tspan>
-                <tspan x="225" dy="33">喜</tspan>
-            </text>
-        </g>
-
-        <!-- 04. 赤口 (60° ~ 120° | 底部水平排列) -->
-        <g class="palace-group" onclick="selectPalace(3)" id="group-3">
-            <path class="palace-path" d="M 185 210.62 L 215 262.58 A 130 130 0 0 1 85 262.58 L 115 210.62 A 70 70 0 0 0 185 210.62 Z" />
-            <text class="palace-text" x="150" y="250">赤 口</text>
-        </g>
-
-        <!-- 05. 小吉 (120° ~ 180° | 左下側直向排列) -->
-        <g class="palace-group" onclick="selectPalace(4)" id="group-4">
-            <path class="palace-path" d="M 115 210.62 L 85 262.58 A 130 130 0 0 1 20 150 L 80 150 A 70 70 0 0 0 115 210.62 Z" />
-            <text class="palace-text" x="65" y="195">
-                <tspan x="60" dy="-12">小</tspan>
-                <tspan x="70" dy="33">吉</tspan>
-            </text>
-        </g>
-
-        <!-- 06. 空亡 (180° ~ 240° | 左上側直向排列) -->
-        <g class="palace-group" onclick="selectPalace(5)" id="group-5">
-            <path class="palace-path" d="M 80 150 L 20 150 A 130 130 0 0 1 85 37.42 L 115 89.38 A 70 70 0 0 0 80 150 Z" />
-            <text class="palace-text" x="65" y="105">
-                <tspan x="75" dy="-15">空</tspan>
-                <tspan x="60" dy="30">亡</tspan>
-            </text>
-        </g>
-
-
-        <!-- ================= 外環十二地支層 (外徑 R=145, 內徑 r=130) ================= -->
-        
-        <!-- 01. 子 (頂部中間偏右) -->
-        <path class="palace-path" d="M 135 18 A 145 145 0 0 1 165 18 L 215 37.42 A 130 130 0 0 1 115 37.42 Z" />
-        <text class="outer-text" x="150" y="27">子</text>
-
-        <!-- 02. 丑 -->
-        <path class="palace-path" d="M 165 18 A 145 145 0 0 1 207.54 42.46 L 243.21 78.13 A 130 130 0 0 1 215 37.42 Z" />
-        <text class="outer-text" x="195" y="47">丑</text>
-
-        <!-- 03. 寅 -->
-        <path class="palace-path" d="M 207.54 42.46 A 145 145 0 0 1 232.08 85 L 269.62 110.38 A 130 130 0 0 1 243.21 78.13 Z" />
-        <text class="outer-text" x="233" y="79">寅</text>
-
-        <!-- 04. 卯 -->
-        <path class="palace-path" d="M 232.08 85 A 145 145 0 0 1 282 135 L 280 150 A 130 130 0 0 1 269.62 110.38 Z" />
-        <text class="outer-text" x="261" y="117">卯</text>
-
-        <!-- 05. 辰 -->
-        <path class="palace-path" d="M 282 135 A 145 145 0 0 1 232.08 215 L 269.62 189.62 A 130 130 0 0 1 280 150 Z" />
-        <text class="outer-text" x="261" y="183">辰</text>
-
-        <!-- 06. 巳 -->
-        <path class="palace-path" d="M 232.08 215 A 145 145 0 0 1 207.54 257.54 L 243.21 221.87 A 130 130 0 0 1 269.62 189.62 Z" />
-        <text class="outer-text" x="233" y="221">巳</text>
-
-        <!-- 07. 午 (底部中間) -->
-        <path class="palace-path" d="M 207.54 257.54 A 145 145 0 0 1 165 282 L 185 262.58 A 130 130 0 0 1 243.21 221.87 Z" />
-        <text class="outer-text" x="150" y="273">午</text>
-
-        <!-- 08. 未 -->
-        <path class="palace-path" d="M 165 282 A 145 145 0 0 1 135 282 L 115 262.58 A 130 130 0 0 1 185 262.58 Z" />
-        <text class="outer-text" x="120" y="273">未</text>
-
-        <!-- 09. 申 -->
-        <path class="palace-path" d="M 135 282 A 145 145 0 0 1 92.46 257.54 L 56.79 221.87 A 130 130 0 0 1 115 262.58 Z" />
-        <text class="outer-text" x="67" y="221">申</text>
-
-        <!-- 10. 西 -->
-        <path class="palace-path" d="M 92.46 257.54 A 145 145 0 0 1 67.92 215 L 30.38 189.62 A 130 130 0 0 1 56.79 221.87 Z" />
-        <text class="outer-text" x="39" y="183">西</text>
-
-        <!-- 11. 戌 -->
-        <path class="palace-path" d="M 67.92 215 A 145 145 0 0 1 18 165 L 20 150 A 130 130 0 0 1 30.38 189.62 Z" />
-        <text class="outer-text" x="39" y="117">戌</text>
-
-        <!-- 12. 亥 -->
-        <path class="palace-path" d="M 18 165 A 145 145 0 0 1 135 18 L 115 37.42 A 130 130 0 0 1 20 150 Z" />
-        <text class="outer-text" x="67" y="79">亥</text>
 
     </svg>
 
     <script>
-        function selectPalace(index) {
+        // 內環選取邏輯（互斥）
+        function selectInner(index) {
             for (let i = 0; i < 6; i++) {
-                document.getElementById(`group-${i}`).classList.remove('active');
+                document.getElementById(`inner-${i}`).classList.remove('active');
             }
-            document.getElementById(`group-${index}`).classList.add('active');
+            document.getElementById(`inner-${index}`).classList.add('active');
+        }
+
+        // 外環選取邏輯（獨立運作，互不干擾）
+        function selectOuter(index) {
+            for (let i = 0; i < 12; i++) {
+                document.getElementById(`outer-${i}`).classList.remove('active');
+            }
+            document.getElementById(`outer-${index}`).classList.add('active');
         }
     </script>
 </body>
