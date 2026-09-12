@@ -10,9 +10,15 @@
             --ring-bg: #16120e;
             --ring-border: #523e2d;
             --patina-glow: #00ffaa;
-            /* 調整為較溫和、不刺眼的柔和紅綠 */
-            --soft-green: #338866;
-            --soft-red: #994444;
+            /* 沉穩柔和的吉凶半透明背景色 */
+            --bg-lucky: rgba(30, 77, 58, 0.75);
+            --border-lucky: #44aa77;
+            --text-lucky: #88ffcc;
+
+            --bg-unlucky: rgba(92, 38, 38, 0.75);
+            --border-unlucky: #cc5555;
+            --text-unlucky: #ff9999;
+
             --warning-glow: #ffaa00;
             --text-color: #bfa381;
         }
@@ -30,18 +36,20 @@
             color: var(--text-color);
         }
 
-        /* 上方控制面板 (無上下按鈕、空白預設) */
+        /* 上方控制面板 (支援手機彈性排版) */
         .control-panel {
             display: flex;
-            gap: 12px;
+            gap: 10px;
             align-items: center;
-            background: rgba(22, 18, 14, 0.85);
+            background: rgba(22, 18, 14, 0.9);
             border: 1px solid var(--ring-border);
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 8px;
             margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.5);
             z-index: 10;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .control-panel label {
@@ -50,7 +58,7 @@
         }
 
         .control-panel input {
-            width: 55px;
+            width: 50px;
             background: #070605;
             border: 1px solid var(--ring-border);
             color: var(--patina-glow);
@@ -60,7 +68,7 @@
             border-radius: 4px;
         }
 
-        /* 隱除 Chrome/Safari/Firefox 的數字輸入上下箭頭 */
+        /* 隱除數字輸入上下箭頭 */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -74,7 +82,7 @@
             background: #221a14;
             color: var(--patina-glow);
             border: 1px solid var(--patina-glow);
-            padding: 6px 15px;
+            padding: 6px 14px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
@@ -88,9 +96,18 @@
             box-shadow: 0 0 10px var(--patina-glow);
         }
 
+        /* 手機響應式容器封裝 */
+        .svg-wrapper {
+            position: relative; 
+            display: inline-block;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+        }
+
         .ring-container {
-            width: 500px;
-            height: 500px;
+            width: 100%;
+            height: 100%;
             filter: drop-shadow(0 0 25px rgba(0, 0, 0, 0.9));
         }
 
@@ -152,72 +169,74 @@
             text-shadow: 0 0 8px var(--warning-glow);
         }
 
-        /* 外側徽章標籤樣式 (預設隱藏) */
-        .badge-group {
-            display: none;
-            cursor: pointer;
-        }
-
-        .badge-bg {
-            fill: #110e0b;
-            stroke: var(--ring-border);
-            stroke-width: 1;
-            rx: 4;
-            ry: 4;
-            transition: all 0.3s ease;
-        }
-
-        .badge-text {
-            font-size: 10px;
-            font-weight: bold;
-            text-anchor: middle;
-            dominant-baseline: central;
-            pointer-events: none;
-        }
-
-        /* 柔和吉凶色彩 (綠、紅不搶眼) */
-        .badge-lucky .badge-bg { stroke: var(--soft-green); fill: rgba(51, 136, 102, 0.15); }
-        .badge-lucky .badge-text { fill: #66cc99; }
-
-        .badge-unlucky .badge-bg { stroke: var(--soft-red); fill: rgba(153, 68, 68, 0.15); }
-        .badge-unlucky .badge-text { fill: #cc6666; }
-
-        /* 中心空白處文字面板樣式 */
+        /* 中心圓形解說面板 (預設狀態) */
         .center-panel {
-            background: rgba(10, 8, 7, 0.85);
+            background: rgba(10, 8, 7, 0.9);
             border: 1px solid var(--ring-border);
             border-radius: 50%;
-            width: 120px;
-            height: 120px;
+            width: 32%;
+            height: 32%;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
             position: absolute;
+            left: 50%; 
+            top: 50%; 
+            transform: translate(-50%, -50%);
             pointer-events: none;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+            transition: all 0.4s ease;
         }
 
         .center-title {
-            font-size: 15px;
+            font-size: clamp(12px, 3.5vw, 16px);
             font-weight: bold;
             color: var(--patina-glow);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
             letter-spacing: 1px;
         }
 
         .center-desc {
-            font-size: 10px;
+            font-size: clamp(9px, 2.5vw, 11px);
             color: var(--text-color);
             padding: 0 10px;
-            line-height: 1.2;
+            line-height: 1.3;
+        }
+
+        /* 動態吉凶背景填滿樣式 */
+        .center-panel.panel-lucky {
+            background: var(--bg-lucky);
+            border-color: var(--border-lucky);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 12px rgba(68, 170, 119, 0.4);
+        }
+        .center-panel.panel-lucky .center-title { color: var(--text-lucky); }
+        .center-panel.panel-lucky .center-desc { color: #e6fff2; }
+
+        .center-panel.panel-unlucky {
+            background: var(--bg-unlucky);
+            border-color: var(--border-unlucky);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.5), 0 0 12px rgba(204, 85, 85, 0.4);
+        }
+        .center-panel.panel-unlucky .center-title { color: var(--text-unlucky); }
+        .center-panel.panel-unlucky .center-desc { color: #ffe6e6; }
+
+        /* 手機螢幕優化適應 */
+        @media (max-width: 520px) {
+            body {
+                padding: 10px;
+            }
+            .control-panel {
+                width: 90%;
+                padding: 8px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- 上方月日輸入控制面板 (無預設值、無上下按鈕) -->
+    <!-- 上方月日輸入控制面板 -->
     <div class="control-panel">
         <label for="lunar-month">農曆月:</label>
         <input type="number" id="lunar-month" min="1" max="12" placeholder="1-12">
@@ -228,11 +247,11 @@
         <button onclick="calculateLiuren()">排盤計算</button>
     </div>
 
-    <!-- 視口容器與中心文字面板包裝 -->
-    <div style="position: relative; display: inline-block;">
+    <!-- 手機響應式外框容器 -->
+    <div class="svg-wrapper">
         
-        <!-- 內環中心空白處的資訊面板 -->
-        <div class="center-panel" id="center-info-box" style="left: 50%; top: 50%; transform: translate(-50%, -50%);">
+        <!-- 內環中心空白處的資訊面板 (動態填滿吉凶色彩) -->
+        <div class="center-panel" id="center-info-box">
             <div class="center-title" id="center-title">小六壬</div>
             <div class="center-desc" id="center-desc">請輸入月日進行排盤</div>
         </div>
@@ -289,109 +308,61 @@
                 <g class="outer-group" onclick="selectOuter(0)" id="outer-0">
                     <path class="ring-path" d="M -46.56 -173.88 A 180 180 0 0 1 46.56 -173.88 L 54.32 -202.87 A 210 210 0 0 0 -54.32 -202.87 Z" />
                     <text class="outer-text" x="0" y="-195">子</text>
-                    <g id="badge-0" transform="translate(0, -218)" class="badge-group" onclick="event.stopPropagation(); clickBadge(0);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-0" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 02. 丑 -->
                 <g class="outer-group" onclick="selectOuter(1)" id="outer-1">
                     <path class="ring-path" d="M 46.56 -173.88 A 180 180 0 0 1 127.28 -127.28 L 148.49 -148.49 A 210 210 0 0 0 54.32 -202.87 Z" />
                     <text class="outer-text" x="100" y="-170">丑</text>
-                    <g id="badge-1" transform="translate(120, -170)" class="badge-group" onclick="event.stopPropagation(); clickBadge(1);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-1" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 03. 寅 -->
                 <g class="outer-group" onclick="selectOuter(2)" id="outer-2">
                     <path class="ring-path" d="M 127.28 -127.28 A 180 180 0 0 1 173.88 -46.56 L 202.87 -54.32 A 210 210 0 0 0 148.49 -148.49 Z" />
                     <text class="outer-text" x="167" y="-100">寅</text>
-                    <g id="badge-2" transform="translate(195, -75)" class="badge-group" onclick="event.stopPropagation(); clickBadge(2);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-2" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 04. 卯 -->
                 <g class="outer-group" onclick="selectOuter(3)" id="outer-3">
                     <path class="ring-path" d="M 173.88 -46.56 A 180 180 0 0 1 173.88 46.56 L 202.87 54.32 A 210 210 0 0 0 202.87 -54.32 Z" />
                     <text class="outer-text" x="194" y="0">卯</text>
-                    <g id="badge-3" transform="translate(218, 0)" class="badge-group" onclick="event.stopPropagation(); clickBadge(3);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-3" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 05. 辰 -->
                 <g class="outer-group" onclick="selectOuter(4)" id="outer-4">
                     <path class="ring-path" d="M 173.88 46.56 A 180 180 0 0 1 127.28 127.28 L 148.49 148.49 A 210 210 0 0 0 202.87 54.32 Z" />
                     <text class="outer-text" x="167" y="100">辰</text>
-                    <g id="badge-4" transform="translate(195, 75)" class="badge-group" onclick="event.stopPropagation(); clickBadge(4);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-4" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 06. 巳 -->
                 <g class="outer-group" onclick="selectOuter(5)" id="outer-5">
                     <path class="ring-path" d="M 127.28 127.28 A 180 180 0 0 1 46.56 173.88 L 54.32 202.87 A 210 210 0 0 0 148.49 148.49 Z" />
                     <text class="outer-text" x="100" y="167">巳</text>
-                    <g id="badge-5" transform="translate(120, 170)" class="badge-group" onclick="event.stopPropagation(); clickBadge(5);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-5" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 07. 午 -->
                 <g class="outer-group" onclick="selectOuter(6)" id="outer-6">
                     <path class="ring-path" d="M 46.56 173.88 A 180 180 0 0 1 -46.56 173.88 L -54.32 202.87 A 210 210 0 0 0 54.32 202.87 Z" />
                     <text class="outer-text" x="0" y="195">午</text>
-                    <g id="badge-6" transform="translate(0, 218)" class="badge-group" onclick="event.stopPropagation(); clickBadge(6);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-6" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 08. 未 -->
                 <g class="outer-group" onclick="selectOuter(7)" id="outer-7">
                     <path class="ring-path" d="M -46.56 173.88 A 180 180 0 0 1 -127.28 127.28 L -148.49 148.49 A 210 210 0 0 0 -54.32 202.87 Z" />
                     <text class="outer-text" x="-100" y="167">未</text>
-                    <g id="badge-7" transform="translate(-120, 170)" class="badge-group" onclick="event.stopPropagation(); clickBadge(7);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-7" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 09. 申 -->
                 <g class="outer-group" onclick="selectOuter(8)" id="outer-8">
                     <path class="ring-path" d="M -127.28 127.28 A 180 180 0 0 1 -173.88 46.56 L -202.87 54.32 A 210 210 0 0 0 -148.49 148.49 Z" />
                     <text class="outer-text" x="-167" y="100">申</text>
-                    <g id="badge-8" transform="translate(-195, 75)" class="badge-group" onclick="event.stopPropagation(); clickBadge(8);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-8" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 10. 酉 -->
                 <g class="outer-group" onclick="selectOuter(9)" id="outer-9">
                     <path class="ring-path" d="M -173.88 46.56 A 180 180 0 0 1 -173.88 -46.56 L -202.87 -54.32 A 210 210 0 0 0 -202.87 54.32 Z" />
                     <text class="outer-text" x="-194" y="0">酉</text>
-                    <g id="badge-9" transform="translate(-218, 0)" class="badge-group" onclick="event.stopPropagation(); clickBadge(9);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-9" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 11. 戌 -->
                 <g class="outer-group" onclick="selectOuter(10)" id="outer-10">
                     <path class="ring-path" d="M -173.88 -46.56 A 180 180 0 0 1 -127.28 -127.28 L -148.49 -148.49 A 210 210 0 0 0 -202.87 -54.32 Z" />
                     <text class="outer-text" x="-167" y="-100">戌</text>
-                    <g id="badge-10" transform="translate(-195, -75)" class="badge-group" onclick="event.stopPropagation(); clickBadge(10);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-10" x="0" y="0">--</text>
-                    </g>
                 </g>
                 <!-- 12. 亥 -->
                 <g class="outer-group" onclick="selectOuter(11)" id="outer-11">
                     <path class="ring-path" d="M -127.28 -127.28 A 180 180 0 0 1 -46.56 -173.88 L -54.32 -202.87 A 210 210 0 0 0 -148.49 -148.49 Z" />
                     <text class="outer-text" x="-100" y="-170">亥</text>
-                    <g id="badge-11" transform="translate(-120, -170)" class="badge-group" onclick="event.stopPropagation(); clickBadge(11);">
-                        <rect class="badge-bg" x="-15" y="-8" width="30" height="16"/>
-                        <text class="badge-text" id="badge-text-11" x="0" y="0">--</text>
-                    </g>
                 </g>
             </g>
 
@@ -400,15 +371,32 @@
 
     <script>
         const liurenData = [
-            { name: "留連", type: "unlucky", desc: "主未詳，事難成" },
-            { name: "速喜", type: "lucky", desc: "人便至，喜訊到" },
-            { name: "赤口", type: "unlucky", desc: "主口舌，官司爭" },
-            { name: "小吉", type: "lucky", desc: "人來喜，謀事通" },
-            { name: "空亡", type: "unlucky", desc: "音信稀，事不順" },
-            { name: "大安", type: "lucky", desc: "身安穩，萬事吉" }
+            { name: "留連", type: "unlucky", desc: "主未詳，事難成 (平/凶)" },
+            { name: "速喜", type: "lucky", desc: "人便至，喜訊到 (大吉)" },
+            { name: "赤口", type: "unlucky", desc: "主口舌，官司爭 (凶)" },
+            { name: "小吉", type: "lucky", desc: "人來喜，謀事通 (吉)" },
+            { name: "空亡", type: "unlucky", desc: "音信稀，事不順 (凶)" },
+            { name: "大安", type: "lucky", desc: "身安穩，萬事吉 (大吉)" }
         ];
 
-        const branchNames = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"];
+        const branchNames = ["子時", "丑時", "寅時", "卯時", "辰時", "巳時", "午時", "未時", "申時", "酉時", "戌時", "亥時"];
+        
+        // 儲存每次計算後 12 個時辰對應的結果索引
+        let currentHourlyResults = [];
+
+        function updateCenterPanel(title, desc, type) {
+            let panel = document.getElementById('center-info-box');
+            document.getElementById('center-title').innerText = title;
+            document.getElementById('center-desc').innerText = desc;
+
+            // 切換中心面板的吉凶填滿色系
+            panel.className = "center-panel";
+            if (type === 'lucky') {
+                panel.classList.add('panel-lucky');
+            } else if (type === 'unlucky') {
+                panel.classList.add('panel-unlucky');
+            }
+        }
 
         function selectInner(index) {
             for (let i = 0; i < 6; i++) {
@@ -416,8 +404,8 @@
             }
             document.getElementById(`inner-${index}`).classList.add('active');
             
-            document.getElementById('center-title').innerText = liurenData[index].name;
-            document.getElementById('center-desc').innerText = liurenData[index].desc;
+            let info = liurenData[index];
+            updateCenterPanel(info.name, info.desc, info.type);
         }
 
         function selectOuter(index) {
@@ -426,22 +414,21 @@
             }
             document.getElementById(`outer-${index}`).classList.add('active');
 
-            let badgeText = document.getElementById(`badge-text-${index}`).innerText;
-            let innerIndex = liurenData.findIndex(item => item.name === badgeText);
-            if (innerIndex !== -1) {
+            // 如果已經排盤過，點擊外環地支時，聯動顯示該時辰對應的宮位結果與吉凶色彩
+            if (currentHourlyResults.length > 0) {
+                let liurenIndex = currentHourlyResults[index];
+                let info = liurenData[liurenIndex];
+
+                // 同步高亮內環對應宮位
                 for (let i = 0; i < 6; i++) {
                     document.getElementById(`inner-${i}`).classList.remove('active');
                 }
-                document.getElementById(`inner-${innerIndex}`).classList.add('active');
-                
-                document.getElementById('center-title').innerText = `${branchNames[index]}：${liurenData[innerIndex].name}`;
-                document.getElementById('center-desc').innerText = liurenData[innerIndex].desc;
-            }
-        }
+                document.getElementById(`inner-${liurenIndex}`).classList.add('active');
 
-        // 點擊具體外側徽章標籤時的處理
-        function clickBadge(index) {
-            selectOuter(index);
+                updateCenterPanel(`${branchNames[index]}：${info.name}`, info.desc, info.type);
+            } else {
+                updateCenterPanel(branchNames[index], "請先輸入月日進行排盤", "");
+            }
         }
 
         function calculateLiuren() {
@@ -453,27 +440,20 @@
                 return;
             }
 
-            // 1. 以月起大安
+            // 1. 以月起大安 (索引 5)
             let monthLanding = (5 + (month - 1)) % 6;
             // 2. 以月落點起日
             let dayLanding = (monthLanding + (day - 1)) % 6;
 
-            // 3. 計算 12 時辰
+            currentHourlyResults = [];
+
+            // 3. 計算 12 時辰落點
             for (let hour = 1; hour <= 12; hour++) {
                 let finalLanding = (dayLanding + (hour - 1)) % 6;
-                let info = liurenData[finalLanding];
-
-                let badgeGroup = document.getElementById(`badge-${hour - 1}`);
-                let badgeText = document.getElementById(`badge-text-${hour - 1}`);
-
-                badgeText.innerText = info.name;
-                // 設定吉凶樣式類別
-                badgeGroup.className.baseVal = `badge-group ${info.type === 'lucky' ? 'badge-lucky' : 'badge-unlucky'}`;
-                // 顯示標籤
-                badgeGroup.style.display = "block";
+                currentHourlyResults.push(finalLanding);
             }
 
-            // 排盤後預設選中子時
+            // 排盤完成後，預設選中子時 (index 0)
             selectOuter(0);
         }
     </script>
